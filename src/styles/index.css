@@ -88,3 +88,16 @@
   filter: blur(1.5px);
   z-index: 1;
 }
+
+
+  /* --- Para el Dashboard de admin --- */
+
+.sidebar-container {
+  background: rgba(13, 10, 20, 0.75);
+  backdrop-filter: blur(12px);
+}
+
+nav {
+  background: rgba(13, 10, 20, 0.75);
+  backdrop-filter: blur(12px);
+}
