@@ -70,7 +70,7 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
             className="text-sm font-black tracking-[0.25em] bg-gradient-to-r from-pink-500 via-purple-400 to-cyan-400 bg-clip-text text-transparent select-none"
             style={{ fontFamily: "'Orbitron', sans-serif" }}
           >
-            NOVABANCO
+            ASTRA BANCK
           </span>
         </div>
       </div>
