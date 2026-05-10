@@ -147,34 +147,32 @@ export const useParallaxEngine = (canvasRef, triggerError, isFlashing) => {
     entities.push(new ShootingStar(width, height));
     entities.push(new ShootingStar(width, height));
 
-    // 👇 NUEVOS COLORES DE TERRENO (Estilo Synthwave oscuro)
+    // INICIALIZACION DE TERRENO
     entities.push(new Terrain({ mHeight: height / 2 - 120 }, width, height)); // Fondo
     entities.push(new Terrain({ displacement: 120, scrollDelay: 50, fillStyle: '#1E1240', mHeight: height / 2 - 60 }, width, height)); // Medio
     entities.push(new Terrain({ displacement: 100, scrollDelay: 20, fillStyle: '#0D0720', mHeight: height / 2 }, width, height)); // Frente
 
     const animate = () => {
-      // 👇 1. CIELO DEGRADADO AURORA (Celeste y Rosado sutil)
-      // Fondo oscuro base espacial
-      ctx.fillStyle = '#05030B';
+      // CIELO DEGRADADO
+      ctx.fillStyle = '#05030B'; // BASE
       ctx.fillRect(0, 0, width, height);
 
       // Degradado diagonal simulando luces del norte sutiles
       const auroraGradient = ctx.createLinearGradient(0, 0, width, height);
-      auroraGradient.addColorStop(0.1, 'rgba(224, 58, 130, 0.05)'); // Rosado/Fucsia (fin de aurora)
-      auroraGradient.addColorStop(0.5, 'rgba(90, 46, 172, 0.05)');  // Transición profunda
-      auroraGradient.addColorStop(0.9, 'rgba(0, 255, 204, 0.08)'); // Celeste (inicio de aurora)
+      auroraGradient.addColorStop(0.1, 'rgba(224, 58, 130, 0.05)'); // Rosado
+      auroraGradient.addColorStop(0.5, 'rgba(90, 46, 172, 0.05)');  // Transición
+      auroraGradient.addColorStop(0.9, 'rgba(0, 255, 204, 0.08)'); // Celeste
 
       ctx.fillStyle = auroraGradient;
       ctx.fillRect(0, 0, width, height);
 
-      // 👇 2. EL PLANETA / SOL NEÓN TÉNUE
+      // SOL NEÓN TÉNUE
       ctx.beginPath();
-      // Dibujamos el sol en el centro horizontal, un poco por debajo del medio
       const sunY = height / 2 + 50;
       const sunRadius = 230;
       const sunGradient = ctx.createRadialGradient(width / 2, sunY, 0, width / 2, sunY, sunRadius);
-      sunGradient.addColorStop(0, 'rgba(236, 72, 153, 0.50)'); // Pink-500 muy transparente
-      sunGradient.addColorStop(1, 'rgba(236, 72, 153, 0)');    // Se desvanece
+      sunGradient.addColorStop(0, 'rgba(236, 72, 153, 0.50)');
+      sunGradient.addColorStop(1, 'rgba(236, 72, 153, 0)');
 
       ctx.fillStyle = sunGradient;
       ctx.arc(width / 2, sunY, sunRadius, 0, Math.PI * 2);
@@ -187,12 +185,12 @@ export const useParallaxEngine = (canvasRef, triggerError, isFlashing) => {
       // Actualizar y dibujar todas las entidades
       entities.forEach((entity) => entity.update(ctx));
 
-      // 🔴 EFECTO FLASH ROJO GLOBAL (Afecta montañas, cielo y estrellas)
+      // EFECTO FLASH ROJO GLOBAL
       if (flashOpacityRef.current > 0) {
-        ctx.fillStyle = `rgba(220, 20, 60, ${flashOpacityRef.current * 0.4})`; // Max 40% opacidad
+        ctx.fillStyle = `rgba(220, 20, 60, ${flashOpacityRef.current * 0.4})`;
         ctx.fillRect(0, 0, width, height);
 
-        flashOpacityRef.current -= 0.008; // Fade out en ~2 segundos
+        flashOpacityRef.current -= 0.008;
         if (flashOpacityRef.current < 0) flashOpacityRef.current = 0;
       }
 

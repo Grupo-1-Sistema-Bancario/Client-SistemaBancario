@@ -1,39 +1,22 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { useParallaxEngine } from '../hooks/useParallaxEngine';
+import { useVerifyEmail } from '../hooks/useVerifyEmail';
 
 export const VerifyEmailPage = () => {
   const canvasRef = useRef(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const verifyEmail = useAuthStore(state => state.verifyEmail);
-  const error = useAuthStore(state => state.error);
-
-  const [status, setStatus] = useState('verifying');
+  const token = searchParams.get('token');
   const setError = useAuthStore(state => state.setError);
 
-  useParallaxEngine(canvasRef, error);
+  const { status, message } = useVerifyEmail(token, () => {
+    // Optionally do something on success if needed, e.g. delay navigation
+  });
 
-  useEffect(() => {
-    const token = searchParams.get('token');
-    if (!token) {
-      useAuthStore.getState().setError('Se requiere un código válido para verificar.');
-      setStatus('error');
-      return;
-    }
-
-    const verify = async () => {
-      const res = await verifyEmail(token);
-      if (res.success) {
-        useAuthStore.getState().clearError();
-        setStatus('success');
-      } else {
-        setStatus('error');
-      }
-    };
-    verify();
-  }, [searchParams, verifyEmail]);
+  // Keep Parallax reacting to errors:
+  useParallaxEngine(canvasRef, status === 'error' ? message : null);
 
   return (
     <div className="relative w-full h-dvh overflow-hidden bg-black flex items-center justify-center">
@@ -75,7 +58,7 @@ export const VerifyEmailPage = () => {
                 <svg className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Enlace Dañado</h2>
-              <p className="text-red-400 text-xs sm:text-sm mb-8">{error || 'El código de verificación ha expirado o es inválido.'}</p>
+              <p className="text-red-400 text-xs sm:text-sm mb-8">{message || 'El código de verificación ha expirado o es inválido.'}</p>
               <button onClick={() => {
                 setError(null);
                 navigate('/');
