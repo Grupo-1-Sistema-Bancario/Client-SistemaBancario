@@ -1,7 +1,7 @@
-
-export default function Spinner() {
+export const Spinner = () => {
   return (
-    <>
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-[#1A0F2E]/80 backdrop-blur-sm gap-4">
+
       <style>{`
         .truck { --dur: 3s; display: block; width: 12em; height: auto; }
 
@@ -12,6 +12,7 @@ export default function Spinner() {
         .truck__outside3,
         .truck__wheel,
         .truck__wheel-spin,
+        .truck__window1,
         .truck__window2 {
           animation: truck-body var(--dur) linear infinite;
         }
@@ -139,6 +140,11 @@ export default function Spinner() {
           </g>
         </g>
       </svg>
-    </>
+
+      <p className="text-sm font-medium tracking-widest uppercase" style={{ color: '#C9B8FF' }}>
+        Cargando...
+      </p>
+
+    </div>
   )
 }
