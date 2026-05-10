@@ -1,8 +1,11 @@
+import { toast as hotToast } from 'react-hot-toast';
+
 export const toast = {
-  success: (message) => console.log('Success:', message),
-  error: (message) => console.log('Error:', message),
-  info: (message) => console.log('Info:', message),
-  warning: (message) => console.log('Warning:', message),
+  success: (message) => hotToast.success(message),
+  error: (message) => hotToast.error(message),
+  info: (message) => hotToast(message),
+  warning: (message) => hotToast(message, { icon: '⚠️' }),
 };
 
-export default toast;
+export const showSuccess = (message, options) => hotToast.success(message, options);
+export const showError = (message, options) => hotToast.error(message, options);
