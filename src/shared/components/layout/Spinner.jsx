@@ -1,5 +1,5 @@
 
-export default function Spinner() {
+export const Spinner = () => {
   return (
     <>
       <style>{`
