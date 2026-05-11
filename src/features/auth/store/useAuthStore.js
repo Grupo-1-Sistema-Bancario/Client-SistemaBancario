@@ -7,6 +7,9 @@ import {
     verifyEmail as verifyEmailRequest,
     resetPassword as resetPasswordRequest
 } from "../../../shared/api"
+import {
+    createAccountRequest
+} from "../../../shared/api/admin"
 import { showError } from "../../../shared/utils/toast";
 
 export const useAuthStore = create(
@@ -59,6 +62,18 @@ export const useAuthStore = create(
                 try {
                     set({ loading: true, error: null });
                     const { data } = await registerRequest(formData);
+                    const authAccountId = data?.user?.id;
+                    console.log(formData.get('Address'));
+                    if (authAccountId) {
+                        await createAccountRequest({
+                            authAccountId: authAccountId,
+                            dpi: formData.get('DPI'),
+                            address: formData.get('Address'),
+                            phone: formData.get('Phone'),
+                            jobType: formData.get('JobType'),
+                            monthlyIncome: 0,
+                        });
+                    }
                     set({ loading: false });
                     return {
                         success: true,
@@ -135,10 +150,10 @@ export const useAuthStore = create(
 
                         return { success: false, error: message }
                     }
-
+                    const accessToken = data.accessToken ?? data.token;
                     set({
                         user: data.userDetails,
-                        token: data.accessToken,
+                        token: accessToken,
                         refreshToken: data.refreshToken,
                         expiresAt: data.expiresAt,
                         loading: false,

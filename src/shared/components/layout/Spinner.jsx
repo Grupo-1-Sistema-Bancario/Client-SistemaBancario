@@ -1,3 +1,4 @@
+
 export const Spinner = () => {
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center bg-[#1A0F2E]/80 backdrop-blur-sm gap-4">
