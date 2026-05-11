@@ -5,6 +5,7 @@ import { UnauthorizedPage } from "../../features/auth/pages/UnauthorizedPage.jsx
 import { ResetPasswordPage } from "../../features/auth/pages/ResetPasswordPage.jsx"
 import { DashboardPage } from "../layouts/DashboardPage.jsx"
 import { NewClients } from "../../features/NewClients/components/NewClients.jsx"
+import { BenefitsPage } from "../../features/benefits/pages/BenefitsPage.jsx"
 
 export const AppRoutes = () => {
     return (
@@ -20,6 +21,7 @@ export const AppRoutes = () => {
                 } 
             > 
                 <Route path="NewClients" element={<NewClients />} />
+                <Route path="/benefits" element={<BenefitsPage />} />
             </Route>
         </Routes>
     )
