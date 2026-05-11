@@ -214,6 +214,11 @@ export const RegisterForm = ({ onSwitchView }) => {
                 </div>
 
                 <div className="space-y-0.5 sm:space-y-1">
+                  <label className="block text-text-dark-secondary text-[9px] sm:text-[11px] uppercase tracking-wider">Ingresos Mensuales</label>
+                  <input type="text" {...register("income", { required: "El campo 'Ingresos mensuales' es obligatorio." ,min:{ value: 0, message: "El campo 'Ingresos mensuales' debe ser un valor positivo." } })} className="w-full py-1.5 px-2 sm:py-3 sm:px-3 rounded-lg sm:rounded-xl bg-[#130E26]/60 border border-[#2D264A] text-white text-[11px] sm:text-sm focus:border-fuchsia-vivid focus:ring-1 focus:ring-fuchsia-vivid" placeholder="0.00" />
+                </div>
+
+                <div className="space-y-0.5 sm:space-y-1">
                   <label className="block text-text-dark-secondary text-[9px] sm:text-[11px] uppercase tracking-wider">DPI (13 dígitos)</label>
                   <input type="text" {...register("dpi", { required: "El campo 'DPI' es obligatorio.", minLength: { value: 13, message: "El campo 'DPI' debe tener exactamente 13 dígitos." }, maxLength: { value: 13, message: "El campo 'DPI' debe tener exactamente 13 dígitos." } })} maxLength={13} className="w-full py-1.5 px-2 sm:py-3 sm:px-3 rounded-lg sm:rounded-xl bg-[#130E26]/60 border border-[#2D264A] text-white text-[11px] sm:text-sm focus:border-fuchsia-vivid focus:ring-1 focus:ring-fuchsia-vivid tracking-[0.2em] font-mono" placeholder="0000000000000" />
                 </div>

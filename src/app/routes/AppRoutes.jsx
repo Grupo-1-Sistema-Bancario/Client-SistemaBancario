@@ -21,7 +21,7 @@ export const AppRoutes = () => {
                 } 
             > 
                 <Route path="NewClients" element={<NewClients />} />
-                <Route path="/benefits" element={<BenefitsPage />} />
+                <Route path="benefits" element={<BenefitsPage />} />
             </Route>
         </Routes>
     )
