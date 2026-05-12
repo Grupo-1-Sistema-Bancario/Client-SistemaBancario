@@ -13,7 +13,8 @@ export const NewClients = () => {
         getRequests();
     }, [getRequests]);
 
-
+    //loading = true; // Simulación de carga para mostrar el spinner
+    
     if (loading) return <Spinner />;
 
     return (

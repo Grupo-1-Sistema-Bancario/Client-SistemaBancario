@@ -12,7 +12,7 @@ export const AccountReviewModal = ({ isOpen, onClose, client }) => {
         formState: { errors },
     } = useForm();
 
-    const { approveAccount, loading } = useAccountRequestStore();
+    const { approveAccount, rejectAccount, loading } = useAccountRequestStore();
 
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export const AccountReviewModal = ({ isOpen, onClose, client }) => {
                 address: client.address,
                 phone: client.phone,
                 jobName: client.jobType || client.jobName,
-                monthlyIncome: "",
+                monthlyIncome: client.monthlyIncome || "No hay datos",
             });
         }
     }, [isOpen, client, reset]);
@@ -123,24 +123,13 @@ export const AccountReviewModal = ({ isOpen, onClose, client }) => {
 
                     <div className="p-5 bg-pink-600/5 border border-pink-500/20 rounded-2xl shadow-inner">
                         <label className="text-[10px] font-bold text-pink-500 uppercase mb-2 block tracking-[0.2em]">
-                            Establecer Ingresos Mensuales (Q)
+                            Ingresos Mensuales (Q)
                         </label>
                         <input
-                            type="number"
-                            autoFocus
-                            placeholder="0.00"
-                            className={`w-full px-5 py-3 rounded-xl bg-[#0D0618] border-2 transition-all font-mono text-white text-lg focus:outline-none ${errors.monthlyIncome ? "border-red-500/50" : "border-purple-500/30 focus:border-pink-500"
-                                }`}
-                            {...register("monthlyIncome", {
-                                required: "El ingreso mensual es obligatorio para crear la cuenta",
-                                min: { value: 100, message: "El monto mínimo es Q100.00" },
-                            })}
+                            readOnly
+                            className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/60 text-sm outline-none cursor-not-allowed"
+                            {...register("monthlyIncome")}
                         />
-                        {errors.monthlyIncome && (
-                            <p className="text-red-400 text-[10px] mt-2 font-mono uppercase tracking-tighter">
-                                [ALERTA SISTEMA]: {errors.monthlyIncome.message}
-                            </p>
-                        )}
                     </div>
 
                     {/* BOTONES DE ACCIÓN */}
@@ -151,6 +140,19 @@ export const AccountReviewModal = ({ isOpen, onClose, client }) => {
                             className="w-full sm:w-auto px-6 py-3 rounded-xl text-purple-400 text-[10px] font-bold uppercase tracking-widest hover:bg-white/5 transition-all"
                         >
                             Cerrar Expediente
+                        </button>
+
+                        <button
+                            type="button"
+                            disabled={loading}
+                            onClick={async () => {
+                                const id = client.id || client._id;
+                                await rejectAccount(id);
+                                onClose();
+                            }}
+                            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-[10px] uppercase tracking-widest hover:bg-red-500/20 transition-all disabled:opacity-50"
+                        >
+                            {loading ? "Procesando..." : "Rechazar Solicitud"}
                         </button>
 
                         <button
