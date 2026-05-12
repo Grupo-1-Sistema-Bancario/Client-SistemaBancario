@@ -39,19 +39,21 @@ export const useAccountRequestStore = create((set, get) => ({
         }
     },
 
-    rejectAccount: async (authAccountId) => {
+    rejectAccount: async (id) => {
         try {
-            set({ loading: true, error: null });
-            await rejectAccountRequest(authAccountId);
+            set({ loading: true });
 
-            // 4. Filtramos sobre 'newClients'
-            set({
-                newClients: get().newClients.filter(c => (c.id || c._id) !== authAccountId),
-                loading: false
-            })
-            return { success: true };
+            const response = await rejectAccountRequest(id);
+
+            if (response.data.success) {
+                set((state) => ({
+                    newClients: state.newClients.filter(c => (c.id || c._id) !== id),
+                    loading: false
+                }));
+                return { success: true };
+            }
         } catch (error) {
-            set({ loading: false, error: "Error al rechazar" });
+            set({ loading: false });
             return { success: false };
         }
     }

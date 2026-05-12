@@ -12,7 +12,7 @@ export const getFullPendingInfo = async () => {
 export const approveAccount = async (authAccountId, accountData) => {
     return await axiosAdmin.post(`accounts/create`, accountData);
 };
-//Metodo para implementarlo en un futuro, por ahora no se muestra en el frontend
+
 export const rejectAccount = async (authAccountId) => {
-    return await axiosAdmin.delete(`/pendingAccounts/reject/${authAccountId}`);
+    return await axiosAdmin.put(`/pendingAccounts/reject/${authAccountId}`);
 };

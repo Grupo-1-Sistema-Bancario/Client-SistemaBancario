@@ -12,7 +12,7 @@ export const AccountReviewModal = ({ isOpen, onClose, client }) => {
         formState: { errors },
     } = useForm();
 
-    const { approveAccount, loading } = useAccountRequestStore();
+    const { approveAccount, rejectAccount, loading } = useAccountRequestStore();
 
 
     useEffect(() => {
@@ -140,6 +140,19 @@ export const AccountReviewModal = ({ isOpen, onClose, client }) => {
                             className="w-full sm:w-auto px-6 py-3 rounded-xl text-purple-400 text-[10px] font-bold uppercase tracking-widest hover:bg-white/5 transition-all"
                         >
                             Cerrar Expediente
+                        </button>
+
+                        <button
+                            type="button"
+                            disabled={loading}
+                            onClick={async () => {
+                                const id = client.id || client._id;
+                                await rejectAccount(id);
+                                onClose();
+                            }}
+                            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-[10px] uppercase tracking-widest hover:bg-red-500/20 transition-all disabled:opacity-50"
+                        >
+                            {loading ? "Procesando..." : "Rechazar Solicitud"}
                         </button>
 
                         <button
