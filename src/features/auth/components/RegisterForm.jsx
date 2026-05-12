@@ -50,9 +50,9 @@ export const RegisterForm = ({ onSwitchView }) => {
     formData.append('Email', data.email);
     formData.append('Phone', data.phone);
     formData.append('Password', data.password);
-
     formData.append('JobType', data.job_type);
     formData.append('Address', data.address);
+    formData.append('Income', data.income);
     console.log("Address capturada: ", data.address);
     formData.append('DPI', data.dpi);
 

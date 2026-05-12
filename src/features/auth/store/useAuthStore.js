@@ -69,9 +69,10 @@ export const useAuthStore = create(
                             authAccountId: authAccountId,
                             dpi: formData.get('DPI'),
                             address: formData.get('Address'),
+                            email: formData.get('Email'),
                             phone: formData.get('Phone'),
                             jobType: formData.get('JobType'),
-                            monthlyIncome: 0,
+                            monthlyIncome: formData.get('Income'),
                         });
                     }
                     set({ loading: false });
