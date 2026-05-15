@@ -50,9 +50,10 @@ export const RegisterForm = ({ onSwitchView }) => {
     formData.append('Email', data.email);
     formData.append('Phone', data.phone);
     formData.append('Password', data.password);
-
     formData.append('JobType', data.job_type);
     formData.append('Address', data.address);
+    formData.append('Income', data.income);
+    console.log("Address capturada: ", data.address);
     formData.append('DPI', data.dpi);
 
     if (profilePic) {
@@ -209,7 +210,12 @@ export const RegisterForm = ({ onSwitchView }) => {
 
                 <div className="space-y-0.5 sm:space-y-1">
                   <label className="block text-text-dark-secondary text-[9px] sm:text-[11px] uppercase tracking-wider">Dirección Intergaláctica</label>
-                  <input type="text" {...register("direccion", { required: "El campo 'Dirección Intergaláctica' es obligatorio." })} className="w-full py-1.5 px-2 sm:py-3 sm:px-3 rounded-lg sm:rounded-xl bg-[#130E26]/60 border border-[#2D264A] text-white text-[11px] sm:text-sm focus:border-fuchsia-vivid focus:ring-1 focus:ring-fuchsia-vivid" placeholder="Sector 4, Vía Láctea..." />
+                  <input type="text" {...register("address", { required: "El campo 'Dirección Intergaláctica' es obligatorio." })} className="w-full py-1.5 px-2 sm:py-3 sm:px-3 rounded-lg sm:rounded-xl bg-[#130E26]/60 border border-[#2D264A] text-white text-[11px] sm:text-sm focus:border-fuchsia-vivid focus:ring-1 focus:ring-fuchsia-vivid" placeholder="Sector 4, Vía Láctea..." />
+                </div>
+
+                <div className="space-y-0.5 sm:space-y-1">
+                  <label className="block text-text-dark-secondary text-[9px] sm:text-[11px] uppercase tracking-wider">Ingresos Mensuales</label>
+                  <input type="text" {...register("income", { required: "El campo 'Ingresos mensuales' es obligatorio." ,min:{ value: 0, message: "El campo 'Ingresos mensuales' debe ser un valor positivo." } })} className="w-full py-1.5 px-2 sm:py-3 sm:px-3 rounded-lg sm:rounded-xl bg-[#130E26]/60 border border-[#2D264A] text-white text-[11px] sm:text-sm focus:border-fuchsia-vivid focus:ring-1 focus:ring-fuchsia-vivid" placeholder="0.00" />
                 </div>
 
                 <div className="space-y-0.5 sm:space-y-1">

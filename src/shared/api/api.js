@@ -8,7 +8,15 @@ const axiosAuth = axios.create({
         "Content-Type": "application/json"
     }
 })
-    axiosAuth.interceptors.request.use((config) => {
+
+const axiosAdmin = axios.create({
+    baseURL: import.meta.env.VITE_ADMIN_URL,
+    timeout: 10000,
+    headers: {
+        "Content-Type": "application/json"
+    }
+})
+axiosAuth.interceptors.request.use((config) => {
     //config._axiosClient = "auth"
     const token = useAuthStore.getState().token;
     if (token) {
@@ -18,4 +26,13 @@ const axiosAuth = axios.create({
     return config;
 })
 
-export { axiosAuth };
+axiosAdmin.interceptors.request.use((config) => {
+    //config._axiosClient = "auth"
+    const token = useAuthStore.getState().token;
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+})
+
+export { axiosAuth, axiosAdmin };

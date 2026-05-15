@@ -1,9 +1,9 @@
 export const Spinner = () => {
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center bg-[#1A0F2E]/80 backdrop-blur-sm gap-4">
-
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/25 backdrop-blur-md gap-6">
       <style>{`
-        .truck { --dur: 3s; display: block; width: 12em; height: auto; }
+        /* Ajustamos el tamaño a 24em para que sea más grande */
+        .truck { --dur: 3s; display: block; width: 24em; height: auto; }
 
         .truck__body,
         .truck__line,
@@ -32,7 +32,7 @@ export const Spinner = () => {
         .truck__wheel:nth-child(2) {
           animation-delay: calc(var(--dur) * 0.0625);
         }
-        .truck__wheel:nth-child(2) .truck__wheel-spin {
+        .truck_wheel:nth-child(2) .truck_wheel-spin {
           transform-origin: 27px 17px;
         }
 
@@ -95,56 +95,57 @@ export const Spinner = () => {
       <svg
         className="truck"
         viewBox="0 0 48 24"
-        width="48px"
-        height="24px"
+        width="96px"
+        height="48px"
         aria-label="Cargando..."
         role="img"
       >
         <g
-          fill="white"
-          stroke="black"
+          fill="none"
+          stroke="#A855F7" /* Un morado vibrante para que resalte */
           strokeLinecap="round"
           strokeLinejoin="round"
-          strokeWidth="1"
+          strokeWidth="1.2" /* Borde un poco más grueso */
           transform="translate(0,2)"
         >
           <g className="truck__body">
             <g strokeDasharray="105 105">
               <polyline className="truck__outside1" points="2 17,1 17,1 11,5 9,7 1,39 1,39 6" fill="none" />
-              <polyline className="truck__outside2" points="39 12,39 17,31.5 17"               fill="none" />
-              <polyline className="truck__outside3" points="22.5 17,11 17"                     fill="none" />
-              <polyline className="truck__window1"  points="6.5 4,8 4,8 9,5 9"                fill="none" />
-              <polygon  className="truck__window2"  points="10 4,10 9,14 9,14 4"              fill="white" />
+              <polyline className="truck__outside2" points="39 12,39 17,31.5 17" fill="none" />
+              <polyline className="truck__outside3" points="22.5 17,11 17" fill="none" />
+              <polyline className="truck__window1" points="6.5 4,8 4,8 9,5 9" fill="none" />
+              <polygon className="truck__window2" points="10 4,10 9,14 9,14 4" fill="none" />
             </g>
             <polyline
               className="truck__line"
               points="43 8,31 8"
               strokeDasharray="10 2 10 2 10 2 10 2 10 2 10 26"
               fill="none"
+              stroke="#D8B4FE" /* Líneas de velocidad más claras */
             />
             <polyline
               className="truck__line"
               points="47 10,31 10"
               strokeDasharray="14 2 14 2 14 2 14 2 14 18"
               fill="none"
+              stroke="#D8B4FE"
             />
           </g>
 
           <g strokeDasharray="15.71 15.71">
             <g className="truck__wheel">
-              <circle className="truck__wheel-spin" r="2.5" cx="6.5" cy="17" fill="white" />
+              <circle className="truck__wheel-spin" r="2.5" cx="6.5" cy="17" fill="none" />
             </g>
             <g className="truck__wheel">
-              <circle className="truck__wheel-spin" r="2.5" cx="27"  cy="17" fill="white" />
+              <circle className="truck__wheel-spin" r="2.5" cx="27" cy="17" fill="none" />
             </g>
           </g>
         </g>
       </svg>
 
-      <p className="text-sm font-medium tracking-widest uppercase" style={{ color: '#C9B8FF' }}>
+      <p className="text-lg font-bold tracking-[0.2em] uppercase text-white drop-shadow-md">
         Cargando...
       </p>
-
     </div>
   )
 }
