@@ -6,6 +6,7 @@ import { ResetPasswordPage } from "../../features/auth/pages/ResetPasswordPage.j
 import { DashboardPage } from "../layouts/DashboardPage.jsx"
 import { NewClients } from "../../features/NewClients/components/NewClients.jsx"
 import { BenefitsPage } from "../../features/benefits/pages/BenefitsPage.jsx"
+import { ProductsPage } from "../../features/products/pages/ProductsPage.jsx"
 
 export const AppRoutes = () => {
     return (
@@ -22,6 +23,7 @@ export const AppRoutes = () => {
             > 
                 <Route path="NewClients" element={<NewClients />} />
                 <Route path="benefits" element={<BenefitsPage />} />
+                <Route path="products" element={<ProductsPage />} />
             </Route>
         </Routes>
     )

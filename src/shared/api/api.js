@@ -7,7 +7,7 @@ const axiosAuth = axios.create({
     headers: {
         "Content-Type": "application/json"
     }
-})
+});
 
 const axiosAdmin = axios.create({
     baseURL: import.meta.env.VITE_ADMIN_URL,
@@ -15,24 +15,51 @@ const axiosAdmin = axios.create({
     headers: {
         "Content-Type": "application/json"
     }
-})
+});
+
+const axiosProduct = axios.create({
+    baseURL: import.meta.env.VITE_ADMIN_URL,
+    timeout: 9000,
+    headers: {
+        "Content-Type": "application/json"
+    }
+});
+
 axiosAuth.interceptors.request.use((config) => {
-    //config._axiosClient = "auth"
+
     const token = useAuthStore.getState().token;
+
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
-})
+});
 
 axiosAdmin.interceptors.request.use((config) => {
-    //config._axiosClient = "auth"
+
     const token = useAuthStore.getState().token;
+
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
-    return config;
-})
 
-export { axiosAuth, axiosAdmin };
+    return config;
+});
+
+axiosProduct.interceptors.request.use((config) => {
+
+    const token = useAuthStore.getState().token;
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+});
+
+export {
+    axiosAuth,
+    axiosAdmin,
+    axiosProduct
+};
