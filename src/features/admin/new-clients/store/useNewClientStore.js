@@ -3,7 +3,7 @@ import {
     getFullPendingInfo as getRequestsRequest,
     approveAccount as approveAccountRequest,
     rejectAccount as rejectAccountRequest
-} from "../../../shared/api/admin.js";
+} from "../../../../shared/api/admin.js";
 
 export const useAccountRequestStore = create((set, get) => ({
 

@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useAccountRequestStore } from "../store/useNewClientStore.js";
 import { useApproveClient } from "../hooks/UseSaveNewClient.jsx";
-import { Spinner } from "../../../shared/components/layout/Spinner.jsx";
+import { Spinner } from "../../../../shared/components/layout/Spinner.jsx";
 
 export const AccountReviewModal = ({ isOpen, onClose, client }) => {
     const {

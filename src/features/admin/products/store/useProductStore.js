@@ -5,7 +5,7 @@ import {
   createProductRequest,
   updateProductRequest,
   changeProductStatusRequest,
-} from "../../../shared/api/product";
+} from "../../../../shared/api/admin";
 
 export const useProductStore = create((set, get) => ({
   products: [],

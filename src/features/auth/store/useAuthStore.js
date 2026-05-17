@@ -10,7 +10,6 @@ import {
 import {
     createAccountRequest
 } from "../../../shared/api/admin"
-import { showError } from "../../../shared/utils/toast";
 
 export const useAuthStore = create(
     persist(
@@ -26,10 +25,8 @@ export const useAuthStore = create(
 
             checkAuth: () => {
                 const token = get().token;
-                const role = get().user?.role;
-                const isAdmin = role === "ADMIN_ROLE";
-
-                if (token && !isAdmin) {
+                
+                if (!token) {
                     set({
                         user: null,
                         token: null,
@@ -37,22 +34,22 @@ export const useAuthStore = create(
                         expiresAt: null,
                         isAuthenticated: false,
                         isLoadingAuth: false,
-                        loading: false,
-                        error: "No tienes permisos para acceder como administrador."
-                    })
+                        loading: false
+                    });
                     return;
                 }
 
                 set({
                     isLoadingAuth: false,
-                    isAuthenticated: Boolean(token) && isAdmin
-                })
+                    isAuthenticated: true
+                });
             },
 
             logout: () => {
                 set({
                     user: null,
                     token: null,
+                    refreshToken: null,
                     expiresAt: null,
                     isAuthenticated: false
                 })
@@ -63,7 +60,7 @@ export const useAuthStore = create(
                     set({ loading: true, error: null });
                     const { data } = await registerRequest(formData);
                     const authAccountId = data?.user?.id;
-                    console.log(formData.get('Address'));
+                    
                     if (authAccountId) {
                         await createAccountRequest({
                             authAccountId: authAccountId,
@@ -132,26 +129,9 @@ export const useAuthStore = create(
                     set({ loading: true, error: null });
 
                     const { data } = await loginRequest({ emailOrUsername, password })
-
-                    const role = data?.userDetails?.role;
-
-                    if (role !== "ADMIN_ROLE") {
-                        const message =
-                            "No tienes permisos para acceder como administrador"
-                        set({
-                            user: null,
-                            token: null,
-                            refreshToken: null,
-                            expiresAt: null,
-                            isAuthenticated: false,
-                            isLoadingAuth: false,
-                            loading: false,
-                            error: message
-                        })
-
-                        return { success: false, error: message }
-                    }
+                    
                     const accessToken = data.accessToken ?? data.token;
+                    
                     set({
                         user: data.userDetails,
                         token: accessToken,
@@ -170,6 +150,7 @@ export const useAuthStore = create(
                     return { success: false, error: message }
                 }
             },
+            
             setError: (error) => {
                 set({ error: null });
                 setTimeout(() => set({ error }), 10);

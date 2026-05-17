@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAccountRequestStore } from "../store/useNewClientStore.js"; // Store adaptado
-import { Spinner } from "../../../shared/components/layout/Spinner.jsx";
+import { Spinner } from "../../../../shared/components/layout/Spinner.jsx";
 import { useEffect as useToastEffect } from "react";
 import { AccountReviewModal } from "./NewClientModal.jsx"; // Modal renombrado
 

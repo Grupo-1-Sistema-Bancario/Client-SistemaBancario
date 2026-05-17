@@ -1,36 +1,31 @@
 import { useState } from "react"
 import Navbar from "./Navbar.jsx"
 import Sidebar from "./Sidebar.jsx"
-import { CoinBackground } from "./CoinBackground.jsx"
+import { Background } from "./Background.jsx"
 
 export const DashboardContainer = ({ children }) => {
-  // Estado compartido: el botón hamburger del Navbar controla el sidebar
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   return (
-    <div className="relative h-screen flex flex-col overflow-hidden bg-[#0D0618]">
+    <div className="relative h-screen flex overflow-hidden bg-[#0D0618]">
+      
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <Background />
+      </div>
 
-      <CoinBackground />
+      <Sidebar isOpen={sidebarOpen} />
 
-      <div className="relative z-10 flex flex-col h-full">
-        <Navbar
-          sidebarOpen={sidebarOpen}
-          onToggleSidebar={() => setSidebarOpen(p => !p)}
+      <div className="flex-1 flex flex-col min-w-0 relative z-10">
+        <Navbar 
+          sidebarOpen={sidebarOpen} 
+          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
         />
 
-        <div className="flex flex-1 overflow-hidden">
-          <Sidebar
-            externalOpen={sidebarOpen}
-            onExternalClose={() => setSidebarOpen(false)}
-            onPin={(pinned) => { if (pinned) setSidebarOpen(true) }}
-          />
-
-          <main className="flex-1 overflow-y-auto overflow-x-hidden p-8 bg-transparent">
-            {children}
-          </main>
-        </div>
+        <main className="flex-1 overflow-y-auto p-8 bg-transparent">
+          {children}
+        </main>
       </div>
 
     </div>
   )
-}   
+}
