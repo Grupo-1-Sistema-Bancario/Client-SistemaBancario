@@ -1,6 +1,5 @@
 import { axiosAdmin } from "./api";
 
-
 export const createAccountRequest = async (accountData) => {
     return await axiosAdmin.post("/pendingAccounts/account-request", accountData);
 };
@@ -18,23 +17,55 @@ export const rejectAccount = async (authAccountId) => {
 };
 
 export const getProductsRequest = async () => {
-    return await axiosProduct.get('/products/get');
+    return await axiosAdmin.get('/products/get');
 };
 
 export const createProductRequest = async (data) => {
-    return await axiosProduct.post('/products/create', data);
+    return await axiosAdmin.post('/products/create', data);
 };
 
 export const updateProductRequest = async (id, data) => {
-    return await axiosProduct.put(`/products/${id}`, data);
+    return await axiosAdmin.put(`/products/${id}`, data);
 };
 
 export const changeProductStatusRequest = async (id, isActive) => {
-    return await axiosProduct.put(
+    return await axiosAdmin.put(
         `/products/${id}/${isActive ? 'deactivate' : 'activate'}`
     );
 };
 
 export const getAccountsRequest = async () => {
     return await axiosAdmin.get("/accounts");
+};
+
+export const makeDepositRequest = async (depositData) => {
+    return await axiosAdmin.post('/transactions/deposit', depositData);
+};
+
+export const getDepositsRequest = async () => {
+    return await axiosAdmin.get('/transactions/deposits');
+};
+
+export const revertDepositRequest = async (transactionId) => {
+    return await axiosAdmin.put(`/transactions/reverse/${transactionId}`);
+};
+
+export const makeTransferRequest = async (transferData) => {
+    return await axiosAdmin.post('/transactions/transfer', transferData);
+};
+
+export const makePaymentRequest = async (paymentData) => {
+    return await axiosAdmin.post('/transactions/payment', paymentData);
+};
+
+export const getActiveProductsRequest = async () => {
+    return await axiosAdmin.get('/products/get?isActive=true');
+};
+
+export const acquireProductRequest = async (productId) => {
+    return await axiosAdmin.post('/products/acquire', { productId });
+};
+
+export const getMyProductsRequest = async () => {
+    return await axiosAdmin.get('/products/my-products');
 };
