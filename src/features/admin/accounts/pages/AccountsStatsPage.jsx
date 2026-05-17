@@ -63,7 +63,7 @@ export const AccountsStatsPage = () => {
                     from-cyan-400
                     to-fuchsia-500
                 ">
-                    Account Statistics
+                    Estadísticas de la Cuenta
                 </h1>
 
                 <p className="
@@ -90,28 +90,28 @@ export const AccountsStatsPage = () => {
             ">
 
                 <StatCard
-                    title="Total Accounts"
+                    title="Cuentas Totales"
                     value={totalAccounts}
                     icon="🌌"
                     glow="from-cyan-500 to-blue-600"
                 />
 
                 <StatCard
-                    title="Active Accounts"
+                    title="Cuentas Activas"
                     value={activeAccounts}
                     icon="🟢"
                     glow="from-emerald-500 to-cyan-500"
                 />
 
                 <StatCard
-                    title="Blocked Accounts"
+                    title="Cuentas Bloqueadas"
                     value={blockedAccounts}
                     icon="🔒"
                     glow="from-red-500 to-pink-600"
                 />
 
                 <StatCard
-                    title="Bank Balance"
+                    title="Saldo bancario"
                     value={`Q ${totalBalance.toLocaleString()}`}
                     icon="💰"
                     glow="from-fuchsia-500 to-purple-700"
@@ -145,7 +145,7 @@ export const AccountsStatsPage = () => {
                         uppercase
                         text-white
                     ">
-                        Monthly Income Average
+                        Promedio de Ingresos Mensuales
                     </h2>
 
                     <p className="
@@ -156,7 +156,7 @@ export const AccountsStatsPage = () => {
                         mt-2
                         font-mono
                     ">
-                        Financial Analytics
+                        Análisis Financiero
                     </p>
 
                     <div className="mt-10">
@@ -193,7 +193,7 @@ export const AccountsStatsPage = () => {
                         uppercase
                         text-white
                     ">
-                        Recent Accounts
+                        Cuentas recientes
                     </h2>
 
                     <div className="space-y-4 mt-8">
