@@ -7,6 +7,11 @@ import { ResetPasswordPage } from "../../features/auth/pages/ResetPasswordPage.j
 import { DashboardPage } from "../layouts/DashboardPage.jsx"
 import { NewClients } from "../../features/admin/new-clients/components/NewClients.jsx"
 import { ProductsPage } from "../../features/admin/products/pages/ProductsPage.jsx"
+import { DepositForm } from "../../features/admin/deposits/components/DepositForm.jsx"
+import { RevertDepositList } from "../../features/admin/deposits/components/RevertDepositList.jsx"
+import { TransferForm } from "../../features/client/transfers/components/TransferForm.jsx"
+import { Catalog } from "../../features/client/catalog/components/Catalog.jsx"
+import { Payments } from "../../features/client/payments/components/Payments.jsx"
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated } = useAuthStore();
@@ -34,10 +39,15 @@ export const AppRoutes = () => {
                     <>
                         <Route path="new-clients" element={<NewClients />} />
                         <Route path="products" element={<ProductsPage />} />
+                        <Route path="deposits" element={<DepositForm />} />
+                        <Route path="deposits/reverse" element={<RevertDepositList />} />
                     </>
                 ) : (
                     <>
                         <Route path="products" element={<ProductsPage />} />
+                        <Route path="transfers" element={<TransferForm />} />
+                        <Route path="payments" element={<Payments />} />
+                        <Route path="catalog" element={<Catalog />} />
                     </>
                 )}
 
