@@ -34,3 +34,7 @@ export const changeProductStatusRequest = async (id, isActive) => {
         `/products/${id}/${isActive ? 'deactivate' : 'activate'}`
     );
 };
+
+export const getAccountsRequest = async () => {
+    return await axiosAdmin.get("/accounts");
+};

@@ -7,6 +7,8 @@ import { ResetPasswordPage } from "../../features/auth/pages/ResetPasswordPage.j
 import { DashboardPage } from "../layouts/DashboardPage.jsx"
 import { NewClients } from "../../features/admin/new-clients/components/NewClients.jsx"
 import { ProductsPage } from "../../features/admin/products/pages/ProductsPage.jsx"
+import { AccountsStatsPage } from "../../features/admin/accounts/pages/AccountsStatsPage.jsx"
+
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated } = useAuthStore();
@@ -34,6 +36,7 @@ export const AppRoutes = () => {
                     <>
                         <Route path="new-clients" element={<NewClients />} />
                         <Route path="products" element={<ProductsPage />} />
+                        <Route path="accounts-stats" element={<AccountsStatsPage />} />
                     </>
                 ) : (
                     <>
