@@ -69,3 +69,23 @@ export const acquireProductRequest = async (productId) => {
 export const getMyProductsRequest = async () => {
     return await axiosAdmin.get('/products/my-products');
 };
+
+export const getFavoritesRequest = async () => {
+    return await axiosAdmin.get('/favorites');
+};
+
+export const addFavoriteRequest = async (favoriteData) => {
+    return await axiosAdmin.post('/favorites', favoriteData);
+};
+
+export const updateFavoriteAliasRequest = async (favoriteId, alias) => {
+    return await axiosAdmin.put(`/favorites/${favoriteId}`, { alias });
+};
+
+export const removeFavoriteRequest = async (favoriteId) => {
+    return await axiosAdmin.delete(`/favorites/${favoriteId}`);
+};
+
+export const transferByAliasRequest = async (transferData) => {
+    return await axiosAdmin.post('/favorites/transfer', transferData);
+};

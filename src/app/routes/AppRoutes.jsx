@@ -13,6 +13,7 @@ import { RevertDepositList } from "../../features/admin/deposits/components/Reve
 import { TransferForm } from "../../features/client/transfers/components/TransferForm.jsx"
 import { Catalog } from "../../features/client/catalog/components/Catalog.jsx"
 import { Payments } from "../../features/client/payments/components/Payments.jsx"
+import { Favorite } from "../../features/client/favorites/components/FavoritesBoard.jsx"
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated } = useAuthStore();
@@ -29,6 +30,7 @@ export const AppRoutes = () => {
             <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+
 
             {/* Ruta Protegida */}
             <Route path="/dashboard" element={
@@ -49,6 +51,7 @@ export const AppRoutes = () => {
                         <Route path="products" element={<ProductsPage />} />
                         <Route path="transfers" element={<TransferForm />} />
                         <Route path="payments" element={<Payments />} />
+                        <Route path="favorites" element={<Favorite />} />
                         <Route path="catalog" element={<Catalog />} />
                     </>
                 )}
