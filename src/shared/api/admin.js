@@ -38,6 +38,18 @@ export const getAccountsRequest = async () => {
     return await axiosAdmin.get("/accounts");
 };
 
+export const updateAccountRequest = async (id, data) => {
+    return await axiosAdmin.put(`/accounts/${id}`, data);
+};
+
+export const activateAccountRequest = async (id) => {
+    return await axiosAdmin.put(`/accounts/${id}/activate`, { isActive: true });
+};
+
+export const deactivateAccountRequest = async (id) => {
+    return await axiosAdmin.put(`/accounts/${id}/desactivate`, { isActive: false });
+};
+
 export const makeDepositRequest = async (depositData) => {
     return await axiosAdmin.post('/transactions/deposit', depositData);
 };
