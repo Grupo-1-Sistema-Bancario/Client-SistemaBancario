@@ -34,6 +34,10 @@ export const changeProductStatusRequest = async (id, isActive) => {
     );
 };
 
+export const getAccountsRequest = async () => {
+    return await axiosAdmin.get("/accounts");
+};
+
 export const makeDepositRequest = async (depositData) => {
     return await axiosAdmin.post('/transactions/deposit', depositData);
 };
