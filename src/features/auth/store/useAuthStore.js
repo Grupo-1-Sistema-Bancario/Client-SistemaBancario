@@ -101,7 +101,7 @@ export const useAuthStore = create(
             resetPassword: async ({ token, newPassword }) => {
                 try {
                     set({ loading: true, error: null });
-                    const { data } = await resetPasswordRequest(token, newPassword);
+                    await resetPasswordRequest(token, newPassword);
                     set({ loading: false });
                     return { success: true }
                 } catch (err) {
