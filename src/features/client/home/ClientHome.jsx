@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../../auth/store/useAuthStore";
 import { useMyTransactions } from "../my-transactions/hooks/useMyTransactions";
 import { getMyAccountRequest } from "../../../shared/api/admin.js"; 
+import { renderDashboardIcon } from "../../../shared/components/icons";
 
 export const ClientHome = () => {
   const { user } = useAuthStore();
@@ -65,28 +66,28 @@ export const ClientHome = () => {
       desc: "Movimiento seguro a la velocidad de la luz.",
       to: "/dashboard/transfers",
       color: "from-pink-500 to-rose-600",
-      icon: "💸"
+      icon: "transfers"
     },
     {
       title: "Realizar Pagos",
       desc: "Liquida tus compromisos sin sudar.",
       to: "/dashboard/payments",
       color: "from-purple-500 to-indigo-600",
-      icon: "💳"
+      icon: "payments"
     },
     {
       title: "Catálogo Astra",
       desc: "Descubre productos exclusivos.",
       to: "/dashboard/catalog",
       color: "from-cyan-500 to-teal-600",
-      icon: "🛍️"
+      icon: "catalog"
     },
     {
       title: "Mis Favoritos",
       desc: "Tus contactos de confianza a un clic.",
       to: "/dashboard/favorites",
       color: "from-amber-500 to-orange-600",
-      icon: "⭐"
+      icon: "favorites"
     }
   ];
 
@@ -123,21 +124,28 @@ export const ClientHome = () => {
         </div>
 
         {/* Resumen Rápido */}
-        <div className="lg:w-1/3 bg-[#1A0F2E]/40 backdrop-blur-md border border-cyan-900/30 rounded-3xl p-6 flex flex-col justify-between">
-            <div>
-              <h3 className="text-cyan-400 font-bold tracking-widest text-xs uppercase mb-4">Actividad Reciente</h3>
-              <div className="space-y-4">
-                  <div className="flex justify-between items-center bg-black/20 p-3 rounded-xl border border-white/5">
-                      <span className="text-gray-300 text-sm">Último ingreso</span>
-                      <span className="text-green-400 font-medium">+ Q{lastIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-                  </div>
-                  <div className="flex justify-between items-center bg-black/20 p-3 rounded-xl border border-white/5">
-                      <span className="text-gray-300 text-sm">Último gasto</span>
-                      <span className="text-red-400 font-medium">- Q{lastExpense.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-                  </div>
-              </div>
+        <div className="lg:w-1/3 bg-[#1A0F2E]/60 backdrop-blur-xl border border-purple-900/40 rounded-3xl p-6 relative overflow-hidden flex flex-col group">
+          <div className="absolute bottom-0 left-0 w-56 h-56 bg-cyan-600/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+
+          <h3 className="text-pink-500 font-bold tracking-widest text-sm uppercase mb-4 relative z-10">Actividad Reciente</h3>
+
+          <div className="flex-1 flex flex-col gap-4 relative z-10">
+            <div className="flex-1 w-full flex justify-between items-center bg-black/20 p-4 rounded-2xl border border-purple-900/30">
+              <span className="text-gray-300 text-sm">Último ingreso</span>
+              <span className="text-green-400 font-semibold">+ Q{lastIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
             </div>
-            <Link to="/dashboard/history" className="text-center text-sm text-cyan-500 hover:text-cyan-400 mt-4 underline decoration-cyan-500/30 underline-offset-4">Ver historial completo →</Link>
+            <div className="flex-1 w-full flex justify-between items-center bg-black/20 p-4 rounded-2xl border border-purple-900/30">
+              <span className="text-gray-300 text-sm">Último gasto</span>
+              <span className="text-red-400 font-semibold">- Q{lastExpense.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+            </div>
+          </div>
+
+          <Link
+            to="/dashboard/history"
+            className="text-center text-sm text-purple-400/50 font-mono text-xs mt-2 uppercase tracking-[0.3em] underline decoration-cyan-500/30 underline-offset-4 relative z-10"
+          >
+            Ver historial completo
+          </Link>
         </div>
       </div>
 
@@ -150,7 +158,9 @@ export const ClientHome = () => {
             className="group relative bg-[#1A0F2E]/50 backdrop-blur-sm border border-purple-900/30 p-6 rounded-2xl hover:bg-[#2D1B5E]/50 transition-all duration-300 overflow-hidden hover:-translate-y-1"
           >
             <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${shortcut.color} opacity-50 group-hover:opacity-100 transition-opacity`}></div>
-            <div className="text-4xl mb-4 grayscale group-hover:grayscale-0 transition-all duration-300">{shortcut.icon}</div>
+            <div className="text-white/90 mb-4 transition-all duration-300 group-hover:scale-110">
+              {renderDashboardIcon(shortcut.icon, "w-10 h-10")}
+            </div>
             <h3 className="text-white font-bold text-lg mb-1">{shortcut.title}</h3>
             <p className="text-gray-400 text-sm">{shortcut.desc}</p>
             

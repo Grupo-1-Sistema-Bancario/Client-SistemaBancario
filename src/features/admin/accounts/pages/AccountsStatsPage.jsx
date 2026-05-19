@@ -93,28 +93,28 @@ export const AccountsStatsPage = () => {
                 <StatCard
                     title="Cuentas Totales"
                     value={totalAccounts}
-                    icon="🌌"
+                    icon="totalAccounts"
                     glow="from-cyan-500 to-blue-600"
                 />
 
                 <StatCard
                     title="Cuentas Activas"
                     value={activeAccounts}
-                    icon="🟢"
+                    icon="activeAccounts"
                     glow="from-emerald-500 to-cyan-500"
                 />
 
                 <StatCard
                     title="Cuentas Bloqueadas"
                     value={blockedAccounts}
-                    icon="🔒"
+                    icon="blockedAccounts"
                     glow="from-red-500 to-pink-600"
                 />
 
                 <StatCard
                     title="Saldo bancario"
                     value={`Q ${totalBalance.toLocaleString()}`}
-                    icon="💰"
+                    icon="totalBalance"
                     glow="from-fuchsia-500 to-purple-700"
                 />
 

@@ -10,6 +10,9 @@ import {
 import {
     createAccountRequest
 } from "../../../shared/api/admin"
+import {
+    getMyAccountRequest
+} from "../../../shared/api/admin"
 
 export const useAuthStore = create(
     persist(
@@ -131,12 +134,51 @@ export const useAuthStore = create(
                     const { data } = await loginRequest({ emailOrUsername, password })
                     
                     const accessToken = data.accessToken ?? data.token;
-                    
+                    const userDetails = data.userDetails;
+
                     set({
-                        user: data.userDetails,
+                        user: userDetails,
                         token: accessToken,
                         refreshToken: data.refreshToken,
                         expiresAt: data.expiresAt,
+                        loading: true,
+                        isAuthenticated: false
+                    });
+
+                    if (userDetails?.role === 'USER_ROLE') {
+                        try {
+                            const { data: accountResponse } = await getMyAccountRequest();
+                            const isActiveAccount = accountResponse?.data?.isActive;
+
+                            if (isActiveAccount === false) {
+                                set({
+                                    user: null,
+                                    token: null,
+                                    refreshToken: null,
+                                    expiresAt: null,
+                                    loading: false,
+                                    isAuthenticated: false,
+                                    error: "Error de autenticación"
+                                });
+
+                                return { success: false, error: "Error de autenticación" };
+                            }
+                        } catch {
+                            set({
+                                user: null,
+                                token: null,
+                                refreshToken: null,
+                                expiresAt: null,
+                                loading: false,
+                                isAuthenticated: false,
+                                error: "Error de autenticación"
+                            });
+
+                            return { success: false, error: "Error de autenticación" };
+                        }
+                    }
+                    
+                    set({
                         loading: false,
                         isAuthenticated: true
                     })

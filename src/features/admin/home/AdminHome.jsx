@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../../auth/store/useAuthStore";
 import { useAccountsStore } from "../accounts/store/useAccountsStore";
 import { useAccountRequestStore } from "../new-clients/store/useNewClientStore";
+import { renderDashboardIcon } from "../../../shared/components/icons";
 
 export const AdminHome = () => {
   const { user } = useAuthStore();
@@ -21,10 +22,10 @@ export const AdminHome = () => {
   const totalBalance = validAccounts.reduce((acc, item) => acc + item.balance, 0);
 
   const adminModules = [
-    { title: "Auditoría de Cuentas", desc: "Revisa las ballenas financieras del sistema.", to: "/dashboard/accounts-stats", icon: "📊", border: "border-cyan-500/50" },
-    { title: "Nuevas Solicitudes", desc: "Gestión de clientes esperando aprobación.", to: "/dashboard/new-clients", icon: "👥", border: "border-pink-500/50" },
-    { title: "Ingreso de Dinero", desc: "Procesamiento de depósitos físicos/digitales.", to: "/dashboard/deposits", icon: "💰", border: "border-green-500/50" },
-    { title: "Control de Daños", desc: "Reversión de depósitos por anomalías.", to: "/dashboard/deposits/reverse", icon: "🛑", border: "border-red-500/50" },
+    { title: "Auditoría de Cuentas", desc: "Revisa las ballenas financieras del sistema.", to: "/dashboard/accounts-stats", icon: "audit", border: "border-cyan-500/50" },
+    { title: "Nuevas Solicitudes", desc: "Gestión de clientes esperando aprobación.", to: "/dashboard/new-clients", icon: "requests", border: "border-pink-500/50" },
+    { title: "Ingreso de Dinero", desc: "Procesamiento de depósitos físicos/digitales.", to: "/dashboard/deposits", icon: "deposits", border: "border-green-500/50" },
+    { title: "Control de Daños", desc: "Reversión de depósitos por anomalías.", to: "/dashboard/deposits/reverse", icon: "reverse", border: "border-red-500/50" },
   ];
 
   return (
@@ -78,8 +79,8 @@ export const AdminHome = () => {
             to={mod.to}
             className={`group bg-[#1A0F2E]/40 backdrop-blur-sm border-l-4 border-y border-r border-y-purple-900/30 border-r-purple-900/30 p-6 rounded-xl hover:bg-[#2D1B5E]/40 transition-all flex items-center gap-6 ${mod.border}`}
           >
-            <div className="text-5xl opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-transform">
-              {mod.icon}
+            <div className="text-cyan-300/90 opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-transform">
+              {renderDashboardIcon(mod.icon, "w-12 h-12")}
             </div>
             <div>
               <h3 className="text-white font-bold text-xl mb-1 group-hover:text-pink-400 transition-colors">{mod.title}</h3>

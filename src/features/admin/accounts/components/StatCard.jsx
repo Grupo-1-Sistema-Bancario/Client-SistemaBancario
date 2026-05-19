@@ -1,9 +1,15 @@
+import { renderDashboardIcon } from "../../../../shared/components/icons";
+
 export const StatCard = ({
     title,
     value,
     icon,
     glow = "from-cyan-500 to-fuchsia-600"
 }) => {
+    const iconElement =
+        typeof icon === "string"
+            ? renderDashboardIcon(icon, "w-8 h-8 text-cyan-300")
+            : icon;
 
     return (
 
@@ -58,9 +64,8 @@ export const StatCard = ({
                         border border-white/10
                         bg-white/5
                         flex items-center justify-center
-                        text-3xl
                     ">
-                        {icon}
+                        {iconElement}
                     </div>
 
                 </div>

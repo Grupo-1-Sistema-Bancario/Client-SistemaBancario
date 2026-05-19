@@ -271,10 +271,10 @@ export const UsersManagementPage = () => {
                                         {user.dpi || "N/A"}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-cyan-400 font-mono">
-                                        ${user.balance?.toFixed(2) || "0.00"}
+                                        Q{user.balance?.toFixed(2) || "0.00"}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-cyan-400 font-mono">
-                                        ${user.monthlyIncome?.toFixed(2) || "0.00"}
+                                        Q{user.monthlyIncome?.toFixed(2) || "0.00"}
                                     </td>
                                     <td className="px-6 py-4 text-center">
                                         <span className={`
