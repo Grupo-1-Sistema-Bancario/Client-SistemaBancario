@@ -40,7 +40,7 @@ const FavoriteFormModal = ({
                     </h3>
                     <button
                         onClick={onClose}
-                        className="text-[var(--color-text-dark-tertiary)] hover:text-white cursor-pointer"
+                        className="text-[var(--color-text-dark-tertiary)] hover:text-white cursor-pointer font-bold"
                         type="button"
                     >
                         X
@@ -49,7 +49,7 @@ const FavoriteFormModal = ({
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div>
-                        <label className="block mb-2 text-sm text-[var(--color-text-dark-secondary)]">Numero de cuenta</label>
+                        <label className="block mb-2 text-sm text-[var(--color-text-dark-secondary)]">Número de cuenta</label>
                         <input
                             type="text"
                             required
@@ -122,7 +122,7 @@ const TransferModal = ({ isOpen, loading, favorite, onClose, onSubmit }) => {
                     </h3>
                     <button
                         onClick={onClose}
-                        className="text-[var(--color-text-dark-tertiary)] hover:text-white cursor-pointer"
+                        className="text-[var(--color-text-dark-tertiary)] hover:text-white cursor-pointer font-bold"
                         type="button"
                     >
                         X
@@ -155,7 +155,7 @@ const TransferModal = ({ isOpen, loading, favorite, onClose, onSubmit }) => {
                     </div>
 
                     <div>
-                        <label className="block mb-2 text-sm text-[var(--color-text-dark-secondary)]">Descripcion</label>
+                        <label className="block mb-2 text-sm text-[var(--color-text-dark-secondary)]">Descripción</label>
                         <textarea
                             rows={3}
                             value={description}
@@ -187,6 +187,44 @@ const TransferModal = ({ isOpen, loading, favorite, onClose, onSubmit }) => {
     );
 };
 
+// --- Nuevo subcomponente para Confirmar Eliminación ---
+const ConfirmDeleteModal = ({ isOpen, favorite, onClose, onConfirm, loading }) => {
+    if (!isOpen || !favorite) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 bg-[var(--color-space-bg)]/85 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+            <div className="w-full max-w-sm rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-deep-purple)] shadow-2xl p-6 space-y-6">
+                <div className="text-center">
+                    <h3 className="text-xl font-black text-white uppercase tracking-wide mb-2">
+                        ¿Eliminar Favorito?
+                    </h3>
+                    <p className="text-sm text-[var(--color-text-dark-secondary)]">
+                        ¿Estás seguro que deseas eliminar a <span className="text-[var(--color-fuchsia-vivid)] font-bold">{favorite.alias || favorite.favoriteAccountNumber}</span> de tus favoritos? Esta acción no se puede deshacer.
+                    </p>
+                </div>
+                <div className="flex justify-center gap-4">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        disabled={loading}
+                        className="px-4 py-2 rounded-lg border border-[var(--color-surface-border)] text-[var(--color-text-dark-secondary)] hover:text-white cursor-pointer disabled:opacity-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onConfirm}
+                        disabled={loading}
+                        className="px-4 py-2 rounded-lg bg-[var(--color-fuchsia-deep)]/80 text-white font-bold hover:bg-[var(--color-fuchsia-vivid)] transition-colors cursor-pointer disabled:opacity-50"
+                    >
+                        {loading ? 'Eliminando...' : 'Eliminar'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const FavoriteCard = ({ favorite, expanded, onToggle, onEdit, onDelete, onTransfer }) => {
     const initials = useMemo(() => {
         const source = favorite.alias || favorite.favoriteAccountNumber || 'FB';
@@ -196,7 +234,7 @@ const FavoriteCard = ({ favorite, expanded, onToggle, onEdit, onDelete, onTransf
     return (
         <article
             onClick={onToggle}
-            className="group relative overflow-hidden rounded-2xl border border-[var(--color-surface-border)] cursor-pointer p-5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1 bg-[linear-gradient(125deg,#120A24_0%,#25154D_40%,#3D1E71_100%)]"
+            className="group relative overflow-hidden rounded-2xl border border-[var(--color-surface-border)] cursor-pointer p-5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1 bgexport bg-[linear-gradient(125deg,#120A24_0%,#25154D_40%,#3D1E71_100%)]"
         >
             <div className="absolute top-4 left-4 flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(255,255,255,0.08)] border border-white/10 text-[var(--color-fuchsia-vivid)] shadow-[0_12px_30px_rgba(216,27,96,0.25)] animate-pulse">
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
@@ -283,6 +321,8 @@ export const Favorite = () => {
     const [editingFavorite, setEditingFavorite] = useState(null);
     const [expandedId, setExpandedId] = useState(null);
     const [transferTarget, setTransferTarget] = useState(null);
+    // Nuevo estado para controlar el modal de confirmación de eliminación
+    const [deletingTarget, setDeletingTarget] = useState(null);
 
     useEffect(() => {
         loadFavorites();
@@ -308,13 +348,16 @@ export const Favorite = () => {
         await handleAddFavorite({ favoriteAccountNumber, alias }, closeCreateModal);
     };
 
-    const deleteFavorite = async (favorite) => {
-        const confirmDelete = window.confirm(
-            `Deseas eliminar el favorito ${favorite.alias || favorite.favoriteAccountNumber}?`
-        );
+    // Abre el nuevo modal de confirmación en lugar del alert del sistema
+    const openDeleteConfirmation = (favorite) => {
+        setDeletingTarget(favorite);
+    };
 
-        if (!confirmDelete) return;
-        await handleRemoveFavorite(favorite._id);
+    // Ejecuta la eliminación real desde el modal personalizado
+    const confirmDeleteFavorite = async () => {
+        if (!deletingTarget) return;
+        await handleRemoveFavorite(deletingTarget._id);
+        setDeletingTarget(null);
     };
 
     const submitTransfer = async (data) => {
@@ -325,20 +368,30 @@ export const Favorite = () => {
 
     return (
         <section className="animate-fadeIn">
-            <div className="mb-8">
-                <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
-                    Mis Favoritos
-                </h1>
-                <p className="text-purple-400/50 font-mono text-xs mt-2 uppercase tracking-[0.3em]">
-                    Tarjetas de cuentas frecuentes
-                </p>
+            {/* Cabecera optimizada con título a la izquierda y botón "+" a la derecha */}
+            <div className="mb-8 flex items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
+                        Mis Favoritos
+                    </h1>
+                    <p className="text-purple-400/50 font-mono text-xs mt-2 uppercase tracking-[0.3em]">
+                        Tarjetas de cuentas frecuentes
+                    </p>
+                </div>
+                <button
+                    onClick={openCreateModal}
+                    title="Agregar favorito"
+                    className="w-12 h-12 flex items-center justify-center rounded-xl bg-gradient-to-r from-[var(--color-gradient-from)] to-[var(--color-gradient-mid)] text-white text-2xl font-bold hover:brightness-110 shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95"
+                >
+                    +
+                </button>
             </div>
 
             {loading && favorites.length === 0 ? (
                 <p className="text-[var(--color-text-dark-secondary)]">Cargando favoritos...</p>
             ) : favorites.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-[var(--color-surface-border)] p-8 text-center bg-[var(--color-deep-purple)]/40">
-                    <p className="text-[var(--color-text-dark-secondary)] mb-4">Aun no tienes favoritos guardados.</p>
+                    <p className="text-[var(--color-text-dark-secondary)] mb-4">Aún no tienes favoritos guardados.</p>
                     <button
                         onClick={openCreateModal}
                         className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-[var(--color-gradient-from)] to-[var(--color-gradient-mid)] text-white font-bold hover:brightness-110 cursor-pointer"
@@ -355,13 +408,14 @@ export const Favorite = () => {
                             expanded={expandedId === favorite._id}
                             onToggle={() => setExpandedId((prev) => (prev === favorite._id ? null : favorite._id))}
                             onEdit={openEditModal}
-                            onDelete={deleteFavorite}
+                            onDelete={openDeleteConfirmation}
                             onTransfer={setTransferTarget}
                         />
                     ))}
                 </div>
             )}
 
+            {/* Modal para Crear/Editar */}
             <FavoriteFormModal
                 isOpen={isFormOpen}
                 mode={editingFavorite ? 'edit' : 'create'}
@@ -372,12 +426,22 @@ export const Favorite = () => {
                 onSubmit={submitFormModal}
             />
 
+            {/* Modal para Transferencias */}
             <TransferModal
                 isOpen={!!transferTarget}
                 loading={loading}
                 favorite={transferTarget}
                 onClose={() => setTransferTarget(null)}
                 onSubmit={submitTransfer}
+            />      
+
+            {/* Nuevo Modal de Confirmación de Eliminación */}
+            <ConfirmDeleteModal
+                isOpen={!!deletingTarget}
+                favorite={deletingTarget}
+                loading={loading}
+                onClose={() => setDeletingTarget(null)}
+                onConfirm={confirmDeleteFavorite}
             />
         </section>
     );

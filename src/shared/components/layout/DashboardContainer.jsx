@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import Navbar from "./Navbar.jsx"
+import { useFavoriteStore } from "../../hooks/useFavoriteStore" // <-- OJO: Verifica que esta ruta sea la correcta en tus carpetas
 import Sidebar from "./Sidebar.jsx"
 import { Background } from "./Background.jsx"
-import { useFavoriteStore } from "../../../features/client/favorites/store/useFavoriteStore.js"
 
 export const DashboardContainer = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
