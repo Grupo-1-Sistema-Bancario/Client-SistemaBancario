@@ -8,11 +8,11 @@
   --color-surface-border:   #4A2D8A;
 
   /* --- Fondos light --- */
-  --color-sky-bg:           #F3F1FA;
-  --color-hero-from:        #FFDCF1;
-  --color-hero-to:          #E8E4FA;
-  --color-card-light:       #FFFFFF;
-  --color-border-light:     #E0DEE9;
+  --color-sky-bg:           #F7F4F0;
+  --color-hero-from:        #EBE0D8;
+  --color-hero-to:          #DFD7CC;
+  --color-card-light:       #EDE4D8;
+  --color-border-light:     #D9CCBB;
 
   /* --- Fucsia --- */
   --color-fuchsia-vivid:    #D81B60;
@@ -31,15 +31,18 @@
   --color-gradient-mid:     #7B2FBE;
   --color-gradient-to:      #4A1D9E;
 
+  /* --- Superposiciones/overlays --- */
+  --color-surface-overlay:  rgba(13,10,20,0.75);
+
   /* --- Texto dark --- */
   --color-text-dark-primary:   #F8F5FF;
   --color-text-dark-secondary: #C9B8FF;
   --color-text-dark-tertiary:  #8B7BB8;
 
   /* --- Texto light --- */
-  --color-text-light-primary:  #211B2C;
-  --color-text-light-secondary:#4A3F6B;
-  --color-text-light-tertiary: #7A6FA0;
+  --color-text-light-primary:  #2A2420;
+  --color-text-light-secondary:#5E534A;
+  --color-text-light-tertiary: #94897E;
 }
 
 :root {
@@ -93,11 +96,11 @@
   /* --- Para el Dashboard de admin --- */
 
 .sidebar-container {
-  background: rgba(13, 10, 20, 0.75);
+  background: var(--color-surface-overlay);
   backdrop-filter: blur(12px);
 }
 
 nav {
-  background: rgba(13, 10, 20, 0.75);
+  background: var(--color-surface-overlay);
   backdrop-filter: blur(12px);
 }

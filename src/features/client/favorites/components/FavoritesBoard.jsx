@@ -234,11 +234,21 @@ const FavoriteCard = ({ favorite, expanded, onToggle, onEdit, onDelete, onTransf
     return (
         <article
             onClick={onToggle}
-            className="group relative overflow-hidden rounded-2xl border border-[var(--color-surface-border)] cursor-pointer p-5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1 bgexport bg-[linear-gradient(125deg,#120A24_0%,#25154D_40%,#3D1E71_100%)]"
+            className="group relative overflow-hidden rounded-2xl border border-[var(--color-surface-border)] cursor-pointer p-5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_28px_60px_rgba(216,27,96,0.22)] bg-[linear-gradient(125deg,#120A24_0%,#25154D_40%,#3D1E71_100%)]"
         >
-            <div className="absolute top-4 right-4 h-12 w-20 rounded-md bg-gradient-to-r from-white/30 to-white/10 border border-white/20" />
-            <div className="absolute -bottom-10 -right-10 h-36 w-36 rounded-full bg-[var(--color-fuchsia-vivid)]/20 blur-2xl" />
+            {/* corazón en la esquina derecha superior (donde va la abreviación) */}
+            <button
+                onClick={(e) => { e.stopPropagation(); /* toggle favorito placeholder */ }}
+                title="Favorito"
+                className="absolute top-4 right-4 z-20 flex items-center justify-center h-9 w-9 rounded-full bg-[var(--color-fuchsia-vivid)]/90 text-white shadow-lg border border-white/20 hover:scale-105 transition-transform"
+            >
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 0 1 7.5 3a5.94 5.94 0 0 1 4.5 2.1A5.94 5.94 0 0 1 16.5 3 5.4 5.4 0 0 1 22 8.5c0 3.78-3.4 6.86-8.55 11.53L12 21.35Z" />
+                </svg>
+            </button>
+            {/* removed decorative blurred circle below heart as requested */}
             <div className="absolute top-6 left-6 h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--color-cyan-vivid)]/70 to-[var(--color-cyan-deep)]/70 border border-white/30" />
+            {/* moved small badge + heart into preview (top-right) */}
 
             <div className="relative z-10 min-h-44 flex flex-col justify-between">
                 <div className="flex items-start justify-between gap-4 pl-12">
@@ -248,7 +258,7 @@ const FavoriteCard = ({ favorite, expanded, onToggle, onEdit, onDelete, onTransf
                             {favorite.alias || 'Sin alias'}
                         </h3>
                     </div>
-                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--color-gradient-from)] via-[var(--color-gradient-mid)] to-[var(--color-gradient-to)] flex items-center justify-center text-white text-sm font-black tracking-wider">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--color-gradient-from)] via-[var(--color-gradient-mid)] to-[var(--color-gradient-to)] flex items-center justify-center text-white text-sm font-black tracking-wider shadow-[0_0_18px_rgba(0,191,165,0.25)] transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110">
                         {initials}
                     </div>
                 </div>
@@ -257,7 +267,7 @@ const FavoriteCard = ({ favorite, expanded, onToggle, onEdit, onDelete, onTransf
                     <p className="font-mono text-lg tracking-[0.18em] text-[var(--color-text-dark-primary)] break-all">
                         {favorite.favoriteAccountNumber}
                     </p>
-                    <p className="text-[10px] mt-2 uppercase tracking-[0.25em] text-[var(--color-cyan-vivid)]">Sistema Bancario</p>
+                    <p className="mt-2 text-[10px] uppercase tracking-[0.25em] text-[var(--color-cyan-vivid)] transition-transform duration-300 group-hover:translate-x-1">Sistema Bancario</p>
                 </div>
 
                 {expanded ? (
