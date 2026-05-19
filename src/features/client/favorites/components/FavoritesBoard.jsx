@@ -236,9 +236,13 @@ const FavoriteCard = ({ favorite, expanded, onToggle, onEdit, onDelete, onTransf
             onClick={onToggle}
             className="group relative overflow-hidden rounded-2xl border border-[var(--color-surface-border)] cursor-pointer p-5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1 bgexport bg-[linear-gradient(125deg,#120A24_0%,#25154D_40%,#3D1E71_100%)]"
         >
-            <div className="absolute top-4 right-4 h-12 w-20 rounded-md bg-gradient-to-r from-white/30 to-white/10 border border-white/20" />
+            <div className="absolute top-4 left-4 flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(255,255,255,0.08)] border border-white/10 text-[var(--color-fuchsia-vivid)] shadow-[0_12px_30px_rgba(216,27,96,0.25)] animate-pulse">
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.84 4.61c-1.54-1.32-3.79-1.17-5.32.34L12 7.42l-3.52-2.47c-1.53-1.51-3.78-1.66-5.32-.34-1.92 1.64-1.96 4.58-.1 6.26L12 21.35l8.94-10.48c1.87-1.68 1.82-4.62-.1-6.26z" />
+              </svg>
+            </div>
             <div className="absolute -bottom-10 -right-10 h-36 w-36 rounded-full bg-[var(--color-fuchsia-vivid)]/20 blur-2xl" />
-            <div className="absolute top-6 left-6 h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--color-cyan-vivid)]/70 to-[var(--color-cyan-deep)]/70 border border-white/30" />
+            <div className="absolute top-6 right-6 h-10 w-10 rounded-full bg-gradient-to-br from-[var(--color-cyan-vivid)]/80 to-[var(--color-cyan-deep)]/80 border border-white/20 shadow-[0_0_50px_rgba(0,191,165,0.2)]" />
 
             <div className="relative z-10 min-h-44 flex flex-col justify-between">
                 <div className="flex items-start justify-between gap-4 pl-12">

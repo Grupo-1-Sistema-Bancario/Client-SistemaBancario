@@ -1,11 +1,11 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect ,useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../store/useAuthStore';
 import { useParallaxEngine } from '../hooks/useParallaxEngine';
 import { LoginForm } from '../components/LoginForm';
 import { RegisterForm } from '../components/RegisterForm';
 import { ForgotPassword } from '../components/ForgotPassword';
-import logoAuth from '../../../assets/img/logo-auth.png';
+import logoAuth from '../../../assets/LOGO.png';
 
 export const AuthPage = () => {
   const canvasRef = useRef(null);
@@ -53,8 +53,8 @@ export const AuthPage = () => {
 
         {/* --- LOGO MOBILE --- */}
         <div className="lg:hidden flex flex-col items-center mb-3 sm:mb-8 z-10 shrink-0">
-          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border border-fuchsia-deep flex items-center justify-center relative shadow-fuchsia-deep/40 shadow-lg mb-2 sm:mb-4 bg-black/30 backdrop-blur-md">
-            <img src={logoAuth} alt="Astra Bank Logo" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border border-fuchsia-deep flex items-center justify-center relative shadow-fuchsia-deep/40 shadow-lg mb-2 sm:mb-4 bg-transparent overflow-hidden">
+            <img src={logoAuth} alt="Astra Bank Logo" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-fuchsia-vivid text-xl sm:text-2xl font-black tracking-[0.15em] uppercase text-center leading-none">Astra Bank</h1>
           <p className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase mt-1 text-center text-white/70">Tu futuro en expansión</p>
@@ -64,8 +64,8 @@ export const AuthPage = () => {
         <div className='hidden lg:flex flex-col justify-center w-full max-w-2xl z-10'>
           {/* Logo  */}
           <div className="flex items-center space-x-5 mb-16">
-            <div className="w-14 h-14 rounded-full border border-fuchsia-deep flex items-center justify-center relative shadow-fuchsia-deep/40 shadow-lg">
-              <img src={logoAuth} alt="Astra Bank Logo" />
+            <div className="w-14 h-14 rounded-full border border-fuchsia-deep flex items-center justify-center relative shadow-fuchsia-deep/40 shadow-lg bg-transparent overflow-hidden">
+              <img src={logoAuth} alt="Astra Bank Logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <h1 className="text-fuchsia-vivid  text-2xl font-black tracking-[0.15em] uppercase">Astra Bank</h1>

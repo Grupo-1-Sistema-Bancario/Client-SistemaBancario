@@ -4,6 +4,10 @@ export const createAccountRequest = async (accountData) => {
     return await axiosAdmin.post("/pendingAccounts/account-request", accountData);
 };
 
+export const getMyAccountRequest = async () => {
+    return await axiosAdmin.get("/accounts/my-account");
+};
+
 export const getFullPendingInfo = async () => {
     return await axiosAdmin.get("/pendingAccounts/get");
 };
