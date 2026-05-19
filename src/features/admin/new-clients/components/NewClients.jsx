@@ -15,7 +15,7 @@ export const NewClients = () => {
 
     //loading = true; // Simulación de carga para mostrar el spinner
     
-    if (loading) return <Spinner />;
+    //if (loading) return <Spinner />;
 
     return (
         <div className="p-8">

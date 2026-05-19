@@ -16,24 +16,25 @@ export const AccountsStatsPage = () => {
     }, []);
 
     // STATS
+    const validAccounts = accounts.filter(acc => acc.accountNumber !== "0000000000");
 
-    const totalAccounts = accounts.length;
+    const totalAccounts = validAccounts.length;
 
     const activeAccounts =
-        accounts.filter(acc => acc.isActive).length;
+        validAccounts.filter(acc => acc.isActive).length;
 
     const blockedAccounts =
-        accounts.filter(acc => !acc.isActive).length;
+        validAccounts.filter(acc => !acc.isActive).length;
 
     const totalBalance =
-        accounts.reduce((acc, item) =>
+        validAccounts.reduce((acc, item) =>
             acc + item.balance, 0
         );
 
     const avgIncome =
         totalAccounts > 0
             ? (
-                accounts.reduce((acc, item) =>
+                validAccounts.reduce((acc, item) =>
                     acc + item.monthlyIncome, 0
                 ) / totalAccounts
             ).toFixed(2)
@@ -63,7 +64,7 @@ export const AccountsStatsPage = () => {
                     from-cyan-400
                     to-fuchsia-500
                 ">
-                    Estadísticas de la Cuenta
+                    Estadísticas
                 </h1>
 
                 <p className="

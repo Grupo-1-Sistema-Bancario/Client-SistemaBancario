@@ -63,14 +63,14 @@ const ADMIN_NAV = [
     items: [
       {
         id: "topCuentas",
-        to: "/dashboard/top-cuentas",
+        to: "/dashboard/accounts-stats",
         label: "Top Cuentas",
         icon: <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>
       },
       {
-        id: "verUsuario",
-        to: "/dashboard/search-history",
-        label: "Ver Usuario",
+        id: "historial",
+        to: "/dashboard/history",
+        label: "Historial de transacciones",
         icon: <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
       },
     ]
@@ -124,7 +124,7 @@ const USER_NAV = [
       {
         id: "history",
         to: "/dashboard/history",
-        label: "Historial de Cuenta",
+        label: "Historial de transacciones",
         icon: <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
       },
     ]

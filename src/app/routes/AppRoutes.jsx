@@ -15,6 +15,10 @@ import { TransferForm } from "../../features/client/transfers/components/Transfe
 import { Catalog } from "../../features/client/catalog/components/Catalog.jsx"
 import { Payments } from "../../features/client/payments/components/Payments.jsx"
 import { Favorite } from "../../features/client/favorites/components/FavoritesBoard.jsx"
+import { TransactionsHistoryPage } from "../../features/admin/transactions-history/pages/TransactionsHistoryPage.jsx" 
+import { MyTransactions } from "../../features/client/my-transactions/components/MyTransactions.jsx"
+import { AdminHome } from "../../features/admin/home/AdminHome.jsx"
+import { ClientHome } from "../../features/client/home/ClientHome.jsx"
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated } = useAuthStore();
@@ -32,7 +36,6 @@ export const AppRoutes = () => {
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-
             {/* Ruta Protegida */}
             <Route path="/dashboard" element={
                 <ProtectedRoute>
@@ -41,23 +44,26 @@ export const AppRoutes = () => {
             }>                 
                 {isAdmin ? (
                     <>
+                        <Route index element={<AdminHome />} />
                         <Route path="new-clients" element={<NewClients />} />
                         <Route path="products" element={<ProductsPage />} />
                         <Route path="accounts-stats" element={<AccountsStatsPage />} />
                         <Route path="users" element={<UsersManagementPage />} />
                         <Route path="deposits" element={<DepositForm />} />
                         <Route path="deposits/reverse" element={<RevertDepositList />} />
+                        <Route path="history" element={<TransactionsHistoryPage />} />
                     </>
                 ) : (
                     <>
+                        <Route index element={<ClientHome />} />
                         <Route path="products" element={<ProductsPage />} />
                         <Route path="transfers" element={<TransferForm />} />
                         <Route path="payments" element={<Payments />} />
                         <Route path="favorites" element={<Favorite />} />
                         <Route path="catalog" element={<Catalog />} />
+                        <Route path="history" element={<MyTransactions />} />
                     </>
                 )}
-
             </Route>
 
             <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} replace />} />

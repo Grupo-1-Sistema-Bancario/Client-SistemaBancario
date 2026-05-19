@@ -37,6 +37,10 @@ export const changeProductStatusRequest = async (id, isActive) => {
 export const getAccountsRequest = async () => {
     return await axiosAdmin.get("/accounts");
 };
+    
+export const getMyAccountRequest = async () => {
+    return await axiosAdmin.get("/accounts/my-account");
+};
 
 export const updateAccountRequest = async (id, data) => {
     return await axiosAdmin.put(`/accounts/${id}`, data);
@@ -101,3 +105,11 @@ export const removeFavoriteRequest = async (favoriteId) => {
 export const transferByAliasRequest = async (transferData) => {
     return await axiosAdmin.post('/favorites/transfer', transferData);
 };
+
+export const getAllTransactionsRequest = async () => {
+    return await axiosAdmin.get('/transactions/all');
+}
+
+export const getTransactionHistoryRequest = async () => {
+    return await axiosAdmin.get('/transactions/history');
+}

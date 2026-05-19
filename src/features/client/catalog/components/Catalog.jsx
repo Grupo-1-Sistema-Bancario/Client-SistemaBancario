@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCatalog } from '../hooks/useCatalog';
+import { usePaymentStore } from '../../payments/store/usePaymentStore'; // Importamos el store de pagos
 
 const ConfirmBuyModal = ({ isOpen, onClose, onConfirm, loading }) => {
     if (!isOpen) return null;
@@ -30,16 +31,19 @@ const ConfirmBuyModal = ({ isOpen, onClose, onConfirm, loading }) => {
 
 export const Catalog = () => {
     const { products, loading, loadCatalog, handleBuy } = useCatalog();
+    const { myProducts, fetchMyProducts } = usePaymentStore(); // Extraemos los productos adquiridos
     const [selectedProductId, setSelectedProductId] = useState(null);
 
     useEffect(() => {
         loadCatalog();
+        fetchMyProducts(); // Cargamos los productos que ya tiene el usuario
     }, []);
 
     const confirmBuy = async () => {
         if (selectedProductId) {
             await handleBuy(selectedProductId);
             setSelectedProductId(null);
+            await fetchMyProducts(); // Refrescamos la lista para deshabilitar el botón inmediatamente
         }
     };
 
@@ -58,36 +62,55 @@ export const Catalog = () => {
                 <p className="text-[var(--color-text-dark-secondary)]">Cargando catálogo...</p>
             ) : (
                 <div className="flex flex-wrap gap-6">
-                    {products.map((product) => (
-                        <div key={product._id} className="bg-[var(--color-deep-purple)] p-6 rounded-2xl border border-[var(--color-surface-border)] w-80 shadow-lg flex flex-col justify-between">
-                            <div>
-                                <h3 className="text-xl font-black text-white uppercase mb-1">{product.name}</h3>
-                                <p className="text-[var(--color-cyan-deep)] text-xs font-bold uppercase tracking-widest mb-4">Astra Bank Products</p>
+                    {products.map((product) => {
+                        // Verificamos si el producto ya está en la lista de adquiridos
+                        const isAcquired = myProducts.some(myProd => myProd._id === product._id);
+                        // Calculamos los puntos (1 punto por cada Q10)
+                        const points = Math.floor(product.price / 10);
 
-                                <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Descripción</p>
-                                <p className="text-[var(--color-text-dark-secondary)] text-sm mb-4 line-clamp-2 h-10">{product.description}</p>
+                        return (
+                            <div key={product._id} className="bg-[var(--color-deep-purple)] p-6 rounded-2xl border border-[var(--color-surface-border)] w-80 shadow-lg flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-xl font-black text-white uppercase mb-1">{product.name}</h3>
+                                    <p className="text-[var(--color-cyan-deep)] text-xs font-bold uppercase tracking-widest mb-4">
+                                        Astra Bank Products | +{points} Pts
+                                    </p>
 
-                                <div className="flex justify-between items-end mb-6">
-                                    <div>
-                                        <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Tipo</p>
-                                        <p className="text-white font-bold uppercase">{product.type}</p>
+                                    <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Descripción</p>
+                                    <p className="text-[var(--color-text-dark-secondary)] text-sm mb-4 line-clamp-2 h-10">{product.description}</p>
+
+                                    <div className="flex justify-between items-end mb-4">
+                                        <div>
+                                            <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Tipo</p>
+                                            <p className="text-white font-bold uppercase">{product.type}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Precio</p>
+                                            <p className="text-[var(--color-cyan-vivid)] font-black text-xl">Q {product.price}</p>
+                                        </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Precio</p>
-                                        <p className="text-[var(--color-cyan-vivid)] font-black text-xl">Q {product.price}</p>
-                                    </div>
+
+                                    {isAcquired && (
+                                        <p className="text-[var(--color-fuchsia-vivid)] text-xs font-semibold mb-2">
+                                            * Debes pagar este producto en "Realizar Pagos" para adquirirlo de nuevo.
+                                        </p>
+                                    )}
                                 </div>
-                            </div>
 
-                            <button
-                                onClick={() => setSelectedProductId(product._id)}
-                                disabled={loading}
-                                className="mt-4 bg-gradient-to-r from-[var(--color-gradient-from)] to-[var(--color-gradient-mid)] text-white font-bold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(216,27,96,0.3)] cursor-pointer"
-                            >
-                                Comprar
-                            </button>
-                        </div>
-                    ))}
+                                <button
+                                    onClick={() => setSelectedProductId(product._id)}
+                                    disabled={loading || isAcquired}
+                                    className={`mt-4 font-bold py-3 rounded-lg transition-all cursor-pointer 
+                                        ${isAcquired
+                                            ? 'bg-[var(--color-space-bg)] border border-[var(--color-surface-border)] text-[var(--color-text-dark-secondary)] cursor-not-allowed opacity-80'
+                                            : 'bg-gradient-to-r from-[var(--color-gradient-from)] to-[var(--color-gradient-mid)] text-white hover:brightness-110 disabled:opacity-50 shadow-[0_0_15px_rgba(216,27,96,0.3)]'
+                                        }`}
+                                >
+                                    {isAcquired ? 'Comprado' : 'Comprar'}
+                                </button>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
 

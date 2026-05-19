@@ -17,16 +17,38 @@ export const UsersManagementPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({});
     const [actionLoading, setActionLoading] = useState(false);
-
+    const [validationError, setValidationError] = useState("");
+    const jobOptions = [
+        "Explorador Independiente",
+        "Tripulante Asalariado",
+        "Comandante (Empresario)"
+    ];
     useEffect(() => {
         getUsers();
     }, []);
 
+    const getDisplayName = (user) => {
+        const name = user.name || user.firstName || "";
+        const surname = user.surname || user.lastName || "";
+        const fullName = `${name} ${surname}`.trim();
+        return fullName || "Sin nombre";
+    };
+
+    const getDisplayUsername = (user) => {
+        return user.username || user.userName || "Sin usuario";
+    };
+
+    const getDisplayEmail = (user) => {
+        return user.email || user.userEmail || "Sin email";
+    };
+
     const filteredUsers = users.filter(user =>
-        user.accountNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+        user.accountNumber !== "0000000000" && // Omitir bóveda
+        (user.accountNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            getDisplayName(user).toLowerCase().includes(searchTerm.toLowerCase()) ||
+            getDisplayUsername(user).toLowerCase().includes(searchTerm.toLowerCase()) ||
+            getDisplayEmail(user).toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.dpi?.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     const handleEditClick = (user) => {
@@ -42,10 +64,32 @@ export const UsersManagementPage = () => {
             jobName: user.jobName || "",
             monthlyIncome: user.monthlyIncome || 0,
         });
+        setValidationError("");
         setShowModal(true);
     };
 
+    const validateForm = () => {
+        if (!/^\d{8}$/.test(formData.phone || "")) {
+            setValidationError("El teléfono debe tener exactamente 8 dígitos.");
+            return false;
+        }
+
+        if (Number(formData.monthlyIncome) < 100) {
+            setValidationError("Los ingresos mensuales no pueden ser menores a 100.");
+            return false;
+        }
+
+        if (!formData.jobName) {
+            setValidationError("Debes seleccionar una ocupación.");
+            return false;
+        }
+
+        setValidationError("");
+        return true;
+    };
+
     const handleSaveChanges = async () => {
+        if (!validateForm()) return;
         try {
             setActionLoading(true);
             await updateUser(selectedUser._id, formData);
@@ -132,7 +176,7 @@ export const UsersManagementPage = () => {
                     </svg>
                     <input
                         type="text"
-                        placeholder="Buscar por número de cuenta, nombre o email..."
+                        placeholder="Buscar por número de cuenta, nombre, usuario, email o DPI..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="
@@ -173,10 +217,16 @@ export const UsersManagementPage = () => {
                                     Número de Cuenta
                                 </th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-cyan-400">
+                                    Nombre
+                                </th>
+                                <th className="px-6 py-4 text-left text-sm font-semibold text-cyan-400">
                                     Usuario
                                 </th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-cyan-400">
                                     Email
+                                </th>
+                                <th className="px-6 py-4 text-left text-sm font-semibold text-cyan-400">
+                                    DPI
                                 </th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-cyan-400">
                                     Balance
@@ -208,11 +258,17 @@ export const UsersManagementPage = () => {
                                     </td>
                                     <td className="px-6 py-4 text-sm text-white">
                                         <div className="font-semibold">
-                                            {user.firstName} {user.lastName}
+                                            {getDisplayName(user)}
                                         </div>
                                     </td>
+                                    <td className="px-6 py-4 text-sm text-white">
+                                        {getDisplayUsername(user)}
+                                    </td>
                                     <td className="px-6 py-4 text-sm text-purple-300">
-                                        {user.email}
+                                        {getDisplayEmail(user)}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-cyan-300 font-mono">
+                                        {user.dpi || "N/A"}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-cyan-400 font-mono">
                                         ${user.balance?.toFixed(2) || "0.00"}
@@ -303,14 +359,14 @@ export const UsersManagementPage = () => {
                             ">
                                 Editar Usuario
                             </h2>
-                            
+
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
                                     <p className="text-xs text-cyan-400/70 uppercase tracking-wider mb-1">
                                         Nombre
                                     </p>
                                     <p className="text-lg font-bold text-cyan-400">
-                                        {selectedUser.firstName}
+                                        {selectedUser.name || selectedUser.firstName || "-"}
                                     </p>
                                 </div>
                                 <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
@@ -318,7 +374,7 @@ export const UsersManagementPage = () => {
                                         Apellido
                                     </p>
                                     <p className="text-lg font-bold text-cyan-400">
-                                        {selectedUser.lastName}
+                                        {selectedUser.surname || selectedUser.lastName || "-"}
                                     </p>
                                 </div>
                                 <div className="col-span-2 bg-purple-500/10 border border-purple-500/30 rounded-lg p-4">
@@ -326,7 +382,7 @@ export const UsersManagementPage = () => {
                                         Email
                                     </p>
                                     <p className="text-lg font-bold text-purple-400 truncate">
-                                        {selectedUser.email}
+                                        {selectedUser.email || "-"}
                                     </p>
                                 </div>
                             </div>
@@ -357,7 +413,7 @@ export const UsersManagementPage = () => {
                                     Número de Cuenta
                                 </label>
                                 <input
-                                    type="text"
+                                    type="number"
                                     value={formData.accountNumber || ""}
                                     onChange={(e) => setFormData({
                                         ...formData,
@@ -375,7 +431,7 @@ export const UsersManagementPage = () => {
                                         focus:outline-none
                                         focus:border-cyan-500
                                     "
-                                    disabled={actionLoading}
+                                    disabled={true}
                                 />
                             </div>
 
@@ -384,7 +440,7 @@ export const UsersManagementPage = () => {
                                     DPI
                                 </label>
                                 <input
-                                    type="text"
+                                    type="number"
                                     value={formData.dpi || ""}
                                     onChange={(e) => setFormData({
                                         ...formData,
@@ -402,7 +458,7 @@ export const UsersManagementPage = () => {
                                         focus:outline-none
                                         focus:border-cyan-500
                                     "
-                                    disabled={actionLoading}
+                                    disabled={true}
                                 />
                             </div>
 
@@ -411,12 +467,20 @@ export const UsersManagementPage = () => {
                                     Teléfono
                                 </label>
                                 <input
-                                    type="text"
+                                    type="number"
                                     value={formData.phone || ""}
-                                    onChange={(e) => setFormData({
-                                        ...formData,
-                                        phone: e.target.value
-                                    })}
+                                    onChange={(e) => {
+                                        const value = e.target.value.replace(/\D/g, "");
+
+                                        if (value.length <= 8) {
+                                            setFormData({
+                                                ...formData,
+                                                phone: value
+                                            });
+                                        }
+                                    }}
+                                    maxLength={8}
+                                    pattern="\d{8}"
                                     className="
                                         w-full
                                         bg-purple-950/30
@@ -428,7 +492,7 @@ export const UsersManagementPage = () => {
                                         text-white
                                         focus:outline-none
                                         focus:border-cyan-500
-                                    "
+                                        "
                                     disabled={actionLoading}
                                 />
                             </div>
@@ -462,10 +526,10 @@ export const UsersManagementPage = () => {
 
                             <div>
                                 <label className="block text-sm font-semibold text-cyan-400 mb-2">
-                                    Ocupación
+                                    Tipo de Trabajo
                                 </label>
-                                <input
-                                    type="text"
+
+                                <select
                                     value={formData.jobName || ""}
                                     onChange={(e) => setFormData({
                                         ...formData,
@@ -475,7 +539,7 @@ export const UsersManagementPage = () => {
                                         w-full
                                         bg-purple-950/30
                                         border
-                                        border-purple-900/50
+                                        border-fuchsia-500
                                         rounded-lg
                                         px-4
                                         py-2
@@ -484,7 +548,17 @@ export const UsersManagementPage = () => {
                                         focus:border-cyan-500
                                     "
                                     disabled={actionLoading}
-                                />
+                                >
+                                    <option value="">
+                                        Selecciona tu rango
+                                    </option>
+
+                                    {jobOptions.map((job) => (
+                                        <option key={job} value={job}>
+                                            {job}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div>
@@ -493,11 +567,16 @@ export const UsersManagementPage = () => {
                                 </label>
                                 <input
                                     type="number"
-                                    value={formData.monthlyIncome || 0}
-                                    onChange={(e) => setFormData({
-                                        ...formData,
-                                        monthlyIncome: parseFloat(e.target.value)
-                                    })}
+                                    min={100}
+                                    value={formData.monthlyIncome || 100}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value);
+
+                                        setFormData({
+                                            ...formData,
+                                            monthlyIncome: value
+                                        });
+                                    }}
                                     className="
                                         w-full
                                         bg-purple-950/30
@@ -514,6 +593,23 @@ export const UsersManagementPage = () => {
                                 />
                             </div>
                         </div>
+                        <p>
+                            .
+                        </p>
+                        {validationError && (
+                                <div className="
+                                    mb-6
+                                    p-3
+                                    rounded-lg
+                                    bg-red-500/20
+                                    border
+                                    border-red-500/50
+                                    text-red-400
+                                    text-sm
+                                ">
+                                    {validationError}
+                                </div>
+                            )}
 
                         <div className="flex gap-3 mt-8">
                             <button
