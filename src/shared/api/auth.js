@@ -34,3 +34,7 @@ export const resetPassword = async (token, newPassword) => {
 export const refreshToken = async (refreshToken) => {
     return await axiosAuth.post("/auth/refresh-token", { refreshToken });
 }
+
+export const getProfile = async () => {
+    return await axiosAuth.get("/auth/profile");
+}

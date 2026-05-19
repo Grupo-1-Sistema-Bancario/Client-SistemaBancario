@@ -1,7 +1,12 @@
-import { useMemo, useState, useEffect } from "react"
+import { useMemo, useState, useEffect, useRef } from "react"
+import { useForm } from "react-hook-form"
+import { createPortal } from "react-dom"
 import { useAuthStore } from "../../../features/auth/store/useAuthStore.js"
 import AvatarUser from "../ui/AvatarUser.jsx"
 import logoAuth from "../../../assets/img/LOGO.png"
+import { getMyAccountRequest, updateAccountRequest } from "../../api/admin.js"
+import { getProfile as getAuthProfileRequest } from "../../api/auth.js"
+import { showError, showSuccess } from "../../utils/toast.js"
 
 const HamburgerIcon = ({ open }) => (
   <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round">
@@ -18,12 +23,188 @@ const DetailRow = ({ label, value }) => (
   </div>
 )
 
+const EditAccountModal = ({ isOpen, onClose, onSubmit, defaultValues, saving }) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      address: "",
+      phone: "",
+      jobName: "",
+      monthlyIncome: "",
+    },
+  })
+
+  // Extraemos el primer error para mostrarlo en la caja global
+  const validationError =
+    errors.phone?.message ||
+    errors.jobName?.message ||
+    errors.address?.message ||
+    errors.monthlyIncome?.message
+
+  const jobOptions = [
+    "Explorador Independiente",
+    "Tripulante Asalariado",
+    "Comandante (Empresario)"
+  ]
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    reset({
+      address: defaultValues?.address || "",
+      phone: defaultValues?.phone || "",
+      jobName: defaultValues?.jobName || "",
+      monthlyIncome:
+        defaultValues?.monthlyIncome !== undefined && defaultValues?.monthlyIncome !== null
+          ? String(defaultValues.monthlyIncome)
+          : "",
+    })
+  }, [isOpen, defaultValues, reset])
+
+  useEffect(() => {
+    if (!isOpen) return
+    document.body.style.overflow = "hidden"
+
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isOpen])
+
+  if (!isOpen) return null
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-3 backdrop-blur-md sm:px-4" onClick={onClose}>
+      <div
+        className="w-full max-w-xl overflow-hidden rounded-3xl border border-fuchsia-500/20 bg-[#0B0717] shadow-[0_0_50px_rgba(168,85,247,0.2)]"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="border-b border-white/5 bg-gradient-to-r from-fuchsia-900/20 to-transparent p-6">
+          <h3 className="text-2xl font-black uppercase italic tracking-tight text-white">Editar cuenta</h3>
+          <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-cyan-400">
+            Astra Bank / Perfil bancario
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="max-h-[78vh] overflow-y-auto p-6">
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs uppercase text-purple-400">Teléfono</label>
+              <input
+                type="number"
+                className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"
+                placeholder="12345678"
+                onInput={(e) => {
+                  // Forzamos un máximo de 8 caracteres al escribir
+                  if (e.target.value.length > 8) {
+                    e.target.value = e.target.value.slice(0, 8);
+                  }
+                }}
+                {...register("phone", {
+                  required: "El teléfono debe tener exactamente 8 dígitos.",
+                  pattern: {
+                    value: /^\d{8}$/,
+                    message: "El teléfono debe tener exactamente 8 dígitos."
+                  }
+                })}
+              />
+            </div>
+
+            <div>
+              <label className="text-xs uppercase text-purple-400">Trabajo</label>
+              <select
+                className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"
+                {...register("jobName", {
+                  required: "Debes seleccionar una ocupación.",
+                })}
+              >
+                <option value="" className="text-gray-400 bg-[#0B0717]">Selecciona tu rango</option>
+                {jobOptions.map((job) => (
+                  <option key={job} value={job} className="bg-[#0B0717] text-white">
+                    {job}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs uppercase text-purple-400">Dirección</label>
+              <textarea
+                rows={3}
+                className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"
+                placeholder="Tu dirección actual"
+                {...register("address", {
+                  required: "La dirección es obligatoria",
+                })}
+              />
+            </div>
+
+            <div>
+              <label className="text-xs uppercase text-purple-400">Ingreso mensual (Q)</label>
+              <input
+                type="number"
+                step="0.01"
+                min="100"
+                className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"
+                placeholder="1000"
+                {...register("monthlyIncome", {
+                  required: "Los ingresos mensuales no pueden ser menores a 100.",
+                  min: {
+                    value: 100,
+                    message: "Los ingresos mensuales no pueden ser menores a 100.",
+                  },
+                })}
+              />
+            </div>
+
+            {/* Caja global de errores copiada exactamente de tu vista de Users */}
+            {validationError && (
+              <div className="mb-6 p-3 rounded-lg bg-red-500/20 border border-red-500/50 text-red-400 text-sm">
+                {validationError}
+              </div>
+            )}
+
+            <div className="flex flex-col-reverse gap-3 border-t border-white/5 pt-6 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full rounded-xl bg-white/5 px-6 py-3 text-xs font-bold uppercase tracking-widest text-gray-400 transition-all hover:bg-white/10 sm:w-auto"
+                disabled={saving}
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="w-full rounded-xl bg-gradient-to-r from-fuchsia-600 to-purple-700 px-8 py-3 text-xs font-black uppercase tracking-[0.2em] text-white transition hover:brightness-125 disabled:opacity-60 sm:w-auto"
+                disabled={saving}
+              >
+                {saving ? "Guardando..." : "Guardar cambios"}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>,
+    document.body
+  )
+}
+
 export default function Navbar({ sidebarOpen, onToggleSidebar }) {
   const [profileOpen, setProfileOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [loadingProfile, setLoadingProfile] = useState(false)
+  const [savingProfile, setSavingProfile] = useState(false)
+  const [bankProfile, setBankProfile] = useState(null)
+  const [authProfile, setAuthProfile] = useState(null)
   const { user, logout } = useAuthStore()
+  const profileContainerRef = useRef(null)
   const isAdmin = user?.role === "ADMIN_ROLE"
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
   const [settingsOpen, setSettingsOpen] = useState(false)
+
   const applyTheme = (mode) => {
     const root = document.documentElement.style
     if (mode === 'light') {
@@ -43,7 +224,6 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
       root.setProperty('--color-gradient-from', '#D81B60')
       root.setProperty('--color-gradient-mid', '#7B2FBE')
       root.setProperty('--color-gradient-to', '#4A1D9E')
-      // softer overlay for light mode
       root.setProperty('--color-surface-overlay', 'rgba(247,244,240,0.80)')
     } else {
       root.setProperty('--color-space-bg', '#0D0A14')
@@ -62,11 +242,81 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
 
   useEffect(() => {
     applyTheme(theme)
-    // close settings on escape
-    const onKey = (e) => e.key === 'Escape' && setSettingsOpen(false)
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setSettingsOpen(false)
+        setProfileOpen(false)
+        setEditModalOpen(false)
+      }
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [theme])
+
+  useEffect(() => {
+    if (!profileOpen || editModalOpen) return
+
+    const handleOutsideClick = (event) => {
+      if (profileContainerRef.current && !profileContainerRef.current.contains(event.target)) {
+        setProfileOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick)
+    return () => document.removeEventListener("mousedown", handleOutsideClick)
+  }, [profileOpen, editModalOpen])
+
+  useEffect(() => {
+    if (!profileOpen || isAdmin) return
+
+    let active = true
+
+    const loadBankProfile = async () => {
+      try {
+        setLoadingProfile(true)
+        const response = await getMyAccountRequest()
+        if (!active) return
+        setBankProfile(response?.data?.data || null)
+      } catch (error) {
+        if (!active) return
+        setBankProfile(null)
+        showError(error?.response?.data?.message || "No se pudo cargar tu cuenta bancaria")
+      } finally {
+        if (active) {
+          setLoadingProfile(false)
+        }
+      }
+    }
+
+    loadBankProfile()
+
+    return () => {
+      active = false
+    }
+  }, [profileOpen, isAdmin])
+
+  useEffect(() => {
+    if (!profileOpen) return
+
+    let active = true
+
+    const loadAuthProfile = async () => {
+      try {
+        const response = await getAuthProfileRequest()
+        if (!active) return
+        setAuthProfile(response?.data?.data || null)
+      } catch {
+        if (!active) return
+        setAuthProfile(null)
+      }
+    }
+
+    loadAuthProfile()
+
+    return () => {
+      active = false
+    }
+  }, [profileOpen])
 
   const handleSetTheme = (mode) => {
     setTheme(mode)
@@ -86,10 +336,51 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
     return user?.username || user?.email || (isAdmin ? "ADMIN" : "CLIENTE")
   }, [user, isAdmin])
 
-  const email = user?.email || "Sin correo"
-  const phone = user?.phone || "Sin teléfono"
-  const address = user?.address || "Sin dirección"
-  const accountNumber = user?.accountNumber || user?.account?.number || "Sin número"
+  const email = authProfile?.email || user?.email || user?.userEmail || "Sin correo"
+  const username = user?.username || "Sin usuario"
+  const phone = bankProfile?.phone || user?.phone || "Sin teléfono"
+  const address = bankProfile?.address || user?.address || "Sin dirección"
+  const accountNumber = bankProfile?.accountNumber || user?.accountNumber || user?.account?.number || "Sin número"
+  const jobName = bankProfile?.jobName || "Sin trabajo"
+  const monthlyIncome = bankProfile?.monthlyIncome ?? null
+
+  const handleUpdateAccount = async (formData) => {
+    if (!bankProfile?._id) {
+      showError("No se encontró una cuenta para editar")
+      return
+    }
+
+    try {
+      setSavingProfile(true)
+
+      const incomeValue = Number(formData.monthlyIncome)
+      if (Number.isNaN(incomeValue) || incomeValue < 100) {
+        showError("Los ingresos mensuales no pueden ser menores a 100.")
+        return
+      }
+
+      const payload = {
+        address: formData.address.trim(),
+        phone: formData.phone.trim(),
+        jobName: formData.jobName.trim(),
+        monthlyIncome: incomeValue,
+      }
+
+      const response = await updateAccountRequest(bankProfile._id, payload)
+      const updated = response?.data?.data
+
+      if (updated) {
+        setBankProfile((prev) => ({ ...prev, ...updated }))
+      }
+
+      showSuccess("Cuenta actualizada correctamente")
+      setEditModalOpen(false)
+    } catch (error) {
+      showError(error?.response?.data?.message || "No se pudo actualizar la cuenta")
+    } finally {
+      setSavingProfile(false)
+    }
+  }
 
   return (
     <nav className="relative z-50 flex w-full items-center justify-between border-b border-purple-900/30 bg-[#0D0618]/80 px-6 py-4 backdrop-blur-xl">
@@ -104,8 +395,8 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-pink-600 via-purple-700 to-cyan-500 shadow-lg shadow-pink-900/40">
-            <img src={logoAuth} alt="Astra Bank Logo" className="h-7 w-7 object-contain" />
+          <div className="flex h-11 w-11 items-center justify-center">
+            <img src={logoAuth} alt="Astra Bank Logo" className="h-full w-full object-contain" />
           </div>
 
           <div className="space-y-1">
@@ -120,78 +411,7 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <button
-          className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-purple-900/30 bg-white/5 text-purple-300 transition-all hover:border-purple-500 hover:bg-purple-700/20"
-          type="button"
-          aria-label="Ver notificaciones"
-        >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-          <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full border-2 border-[#0D0618] bg-pink-500" />
-        </button>
-
-        <div className="relative">
-          <button
-            onClick={() => setSettingsOpen((s) => !s)}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-cyan-300 transition-all hover:border-cyan-400/60 hover:bg-white/10"
-            type="button"
-            aria-label="Ajustes de tema"
-          >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" />
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 1 1 3.3 17.3l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09c.68 0 1.26-.41 1.51-1a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 6.7 3.3l.06.06c.5.5 1.23.66 1.82.33.6-.33 1-1 1-1.51V3a2 2 0 1 1 4 0v.09c0 .56.41 1.18 1 1.51.59.34 1.32.17 1.82-.33l.06-.06A2 2 0 1 1 20.7 6.7l-.06.06c-.33.6-.17 1.32.33 1.82.5.5 1.23.66 1.82.33H21a2 2 0 1 1 0 4h-.09c-.56 0-1.18.41-1.51 1z" />
-            </svg>
-          </button>
-
-          {settingsOpen && (
-            <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border border-white/10 bg-[#13081C]/95 p-3 shadow-lg backdrop-blur animate-fadeIn">
-              <div className="space-y-2">
-                <button
-                  onClick={() => handleSetTheme('dark')}
-                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2 ${theme === 'dark' ? 'bg-white/6' : 'hover:bg-white/5'}`}
-                >
-                  <svg className="h-6 w-6 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                  </svg>
-                  <div className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-sm ${theme === 'dark' ? 'text-white font-semibold' : 'text-white/80'}`}>Modo Oscuro</span>
-                      <span className="ml-auto text-[11px] text-white/60">Actual</span>
-                    </div>
-                    <p className="mt-1 text-[12px] text-white/50">Contraste profundo que realza acentos fucsia y cian.</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="h-6 w-10 rounded-md border border-[var(--color-surface-border)] bg-[var(--color-space-bg)]" />
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => handleSetTheme('light')}
-                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2 ${theme === 'light' ? 'bg-white/6' : 'hover:bg-white/5'}`}
-                >
-                  <svg className="h-6 w-6 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="4" />
-                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-                  </svg>
-                  <div className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-sm ${theme === 'light' ? 'text-white font-semibold' : 'text-white/80'}`}>Modo Claro</span>
-                      <span className="ml-auto text-[11px] text-white/60">Cielo Estelar</span>
-                    </div>
-                    <p className="mt-1 text-[12px] text-white/50">Limpio y suave; blanco atenuado para menor fatiga visual.</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="h-6 w-10 rounded-md border border-[var(--color-border-light)] bg-[var(--color-sky-bg)]" />
-                  </div>
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="relative">
+        <div className="relative" ref={profileContainerRef}>
           <button
             onClick={() => setProfileOpen((prev) => !prev)}
             className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 transition-all hover:border-pink-500/50 hover:bg-white/10"
@@ -218,7 +438,7 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
           </button>
 
           {profileOpen && (
-            <div className="absolute right-0 mt-3 w-[340px] overflow-hidden rounded-[2rem] border border-white/10 bg-[#13081C]/95 p-4 shadow-[0_30px_80px_rgba(92,27,149,0.45)] backdrop-blur-2xl">
+            <div className="absolute right-0 mt-3 max-h-[calc(100vh-6.5rem)] w-[340px] overflow-y-auto rounded-[2rem] border border-white/10 bg-[#13081C]/95 p-4 shadow-[0_30px_80px_rgba(92,27,149,0.45)] backdrop-blur-2xl">
               <div className="rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-[#2A123D] via-[#150A24] to-[#091A1C] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                 <div className="flex items-center gap-3">
                   <AvatarUser
@@ -238,7 +458,7 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
                       {displayName}
                     </h3>
                     <p className="mt-1 text-[11px] uppercase tracking-[0.3em] text-pink-300/80">
-                      {isAdmin ? "Logo del banco como avatar" : "Perfil de usuario"}
+                      {"Perfil de usuario"}
                     </p>
                   </div>
                 </div>
@@ -246,17 +466,44 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
 
               <div className="mt-4 space-y-3">
                 <DetailRow label="Nombre" value={displayName} />
-                <DetailRow label="Número de cuenta" value={accountNumber} />
-                <DetailRow label="Correo" value={email} />
-                <DetailRow label="Teléfono" value={phone} />
-                <DetailRow label="Dirección" value={address} />
+                {isAdmin ? (
+                  <>
+                    <DetailRow label="Usuario" value={username} />
+                    <DetailRow label="Correo" value={email} />
+                    <DetailRow label="Rol" value="Administrador" />
+                  </>
+                ) : (
+                  <>
+                    <DetailRow label="Número de cuenta" value={accountNumber} />
+                    <DetailRow label="Correo" value={email} />
+                    <DetailRow label="Teléfono" value={phone} />
+                    <DetailRow label="Dirección" value={address} />
+                    <DetailRow label="Trabajo" value={jobName} />
+                    <DetailRow
+                      label="Ingreso mensual"
+                      value={monthlyIncome !== null ? `Q${Number(monthlyIncome).toFixed(2)}` : "Sin dato"}
+                    />
+                  </>
+                )}
               </div>
 
               <div className="mt-4">
+                {!isAdmin && (
+                  <button
+                    onClick={() => setEditModalOpen(true)}
+                    className="mb-3 w-full rounded-2xl bg-[#7B3FEC] px-4 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#6732C9] disabled:opacity-60"
+                    type="button"
+                    disabled={loadingProfile || !bankProfile?._id}
+                  >
+                    {loadingProfile ? "Cargando cuenta..." : "Editar cuenta"}
+                  </button>
+                )}
+
                 <button
                   onClick={() => {
                     logout()
                     setProfileOpen(false)
+                    setEditModalOpen(false)
                   }}
                   className="w-full rounded-2xl bg-[#D81B60] px-4 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#B3154C]"
                   type="button"
@@ -266,6 +513,14 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
               </div>
             </div>
           )}
+
+          <EditAccountModal
+            isOpen={editModalOpen}
+            onClose={() => setEditModalOpen(false)}
+            onSubmit={handleUpdateAccount}
+            defaultValues={bankProfile}
+            saving={savingProfile}
+          />
         </div>
       </div>
     </nav>

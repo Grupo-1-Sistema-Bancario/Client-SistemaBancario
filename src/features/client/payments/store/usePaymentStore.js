@@ -3,13 +3,18 @@ import { getMyProductsRequest, makePaymentRequest } from '../../../../shared/api
 
 export const usePaymentStore = create((set) => ({
     myProducts: [],
+    loyaltyPoints: 0, 
     loading: false,
 
     fetchMyProducts: async () => {
         try {
             set({ loading: true });
             const response = await getMyProductsRequest();
-            set({ myProducts: response.data.data || [], loading: false });
+            set({ 
+                myProducts: response.data.data || [], 
+                loyaltyPoints: response.data.loyaltyPoints || 0,
+                loading: false 
+            });
         } catch (error) {
             set({ loading: false });
             console.error("Error al cargar mis productos", error);

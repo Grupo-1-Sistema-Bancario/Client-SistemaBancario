@@ -4,55 +4,128 @@ import { useDeposits } from '../hooks/useDeposits';
 export const DepositForm = () => {
     const { handleMakeDeposit, loading } = useDeposits();
     const [formData, setFormData] = useState({ accountNumberTo: '', amount: '', description: '' });
+    const [validationError, setValidationError] = useState("");
+
+    const validateForm = () => {
+        if (!/^\d{10}$/.test(formData.accountNumberTo || "")) {
+            setValidationError("El número de cuenta debe tener exactamente 10 dígitos.");
+            return false;
+        }
+
+        if (Number(formData.amount) < 0) {
+            setValidationError("El monto del depósito no puede ser negativo.");
+            return false;
+        }
+
+        if (Number(formData.amount) > 2000) {
+            setValidationError("El monto del depósito no puede exceder de Q2000.");
+            return false;
+        }
+
+        setValidationError("");
+        return true;
+    };
 
     const onSubmit = (e) => {
         e.preventDefault();
-        handleMakeDeposit(formData, () => setFormData({ accountNumberTo: '', amount: '', description: '' }));
+
+        if (!validateForm()) return;
+
+        handleMakeDeposit(formData, () =>
+            setFormData({
+                accountNumberTo: '',
+                amount: '',
+                description: ''
+            })
+        );
     };
 
     return (
-        <div className="p-6 bg-[var(--color-deep-purple)] rounded-xl shadow-lg border border-[var(--color-surface-border)] max-w-2xl mx-auto animate-fadeIn">
-            <h2 className="text-2xl font-bold text-[var(--color-fuchsia-vivid)] mb-6">Realizar Depósito</h2>
-            <form onSubmit={onSubmit} className="flex flex-col gap-4">
-                <div>
-                    <label className="text-[var(--color-text-dark-secondary)] mb-2 block font-medium">Número de Cuenta Destino</label>
-                    <input
-                        type="number"
-                        required
-                        className="w-full p-3 bg-[var(--color-space-bg)] text-[var(--color-text-dark-primary)] rounded-lg border border-[var(--color-surface-border)] focus:border-[var(--color-fuchsia-vivid)] focus:ring-1 focus:ring-[var(--color-fuchsia-vivid)] outline-none transition-all font-mono"
-                        value={formData.accountNumberTo}
-                        onChange={(e) => setFormData({ ...formData, accountNumberTo: e.target.value })}
-                    />
-                </div>
-                <div>
-                    <label className="text-[var(--color-text-dark-secondary)] mb-2 block font-medium">Monto (Q)</label>
-                    <input
-                        type="number"
-                        required
-                        min="1"
-                        step="0.01"
-                        className="w-full p-3 bg-[var(--color-space-bg)] text-[var(--color-text-dark-primary)] rounded-lg border border-[var(--color-surface-border)] focus:border-[var(--color-fuchsia-vivid)] focus:ring-1 focus:ring-[var(--color-fuchsia-vivid)] outline-none transition-all font-mono"
-                        value={formData.amount}
-                        onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    />
-                </div>
-                <div>
-                    <label className="text-[var(--color-text-dark-secondary)] mb-2 block font-medium">Descripción (Opcional)</label>
-                    <input
-                        type="text"
-                        className="w-full p-3 bg-[var(--color-space-bg)] text-[var(--color-text-dark-primary)] rounded-lg border border-[var(--color-surface-border)] focus:border-[var(--color-fuchsia-vivid)] focus:ring-1 focus:ring-[var(--color-fuchsia-vivid)] outline-none transition-all"
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="mt-4 bg-gradient-to-r from-[var(--color-gradient-from)] to-[var(--color-gradient-mid)] text-white font-bold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(216,27,96,0.3)] cursor-pointer"
-                >
-                    {loading ? 'Procesando...' : 'Depositar Fondos'}
-                </button>
-            </form>
+        <div className="min-h-full p-8">
+            <div className="mb-8">
+                <h1 className="text-4xl font-black uppercase italic tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-500">
+                    Realizar Depósito
+                </h1>
+                <p className="text-cyan-400/50 uppercase tracking-[0.4em] text-xs mt-3 font-mono">
+                    Operación de Bóveda
+                </p>
+            </div>
+
+            <div className="bg-black/40 backdrop-blur-xl border border-purple-900/30 rounded-2xl p-6 animate-fadeIn">
+                <form onSubmit={onSubmit} className="flex flex-col gap-6">
+                    <div>
+                        <label className="block text-sm font-semibold text-cyan-400 mb-2 uppercase tracking-wider">
+                            Número de Cuenta Destino
+                        </label>
+                        <input
+                            type="number"
+                            required
+                            maxLength={8}
+                            pattern="\d{8}"
+                            className="w-full bg-black/40 border border-purple-900/30 rounded-xl px-4 py-3 text-white placeholder-purple-400/50 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all font-mono"
+                            placeholder="Ej. 0000000000"
+                            value={formData.accountNumberTo}
+                            onChange={(e) => {
+                                const value = e.target.value.replace(/\D/g, "");
+                                if (value.length <= 10) {
+                                    setFormData({
+                                        ...formData,
+                                        accountNumberTo: e.target.value
+                                    })
+                                }
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold text-cyan-400 mb-2 uppercase tracking-wider">
+                            Monto (Q)
+                        </label>
+                        <input
+                            type="number"
+                            required
+                            min="1"
+                            step="0.01"
+                            className="w-full bg-black/40 border border-purple-900/30 rounded-xl px-4 py-3 text-white placeholder-purple-400/50 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all font-mono"
+                            placeholder="0.00"
+                            value={formData.amount}
+                            onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold text-cyan-400 mb-2 uppercase tracking-wider">
+                            Descripción (Opcional)
+                        </label>
+                        <input
+                            type="text"
+                            className="w-full bg-black/40 border border-purple-900/30 rounded-xl px-4 py-3 text-white placeholder-purple-400/50 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+                            placeholder="Motivo del depósito"
+                            value={formData.description}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        />
+                    </div>
+                    {validationError && (
+                        <div className="
+                                    mb-6
+                                    p-3
+                                    rounded-lg
+                                    bg-red-500/20
+                                    border
+                                    border-red-500/50
+                                    text-red-400
+                                    text-sm
+                                ">
+                            {validationError}
+                        </div>
+                    )}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="mt-4 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white font-bold uppercase tracking-wider hover:brightness-110 transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(0,191,165,0.3)]"
+                    >
+                        {loading ? 'Procesando...' : 'Depositar Fondos'}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

@@ -2,17 +2,17 @@ import { usePaymentStore } from '../store/usePaymentStore';
 import { showSuccess, showError } from '../../../../shared/utils/toast';
 
 export const usePayments = () => {
-    const { myProducts, loading, fetchMyProducts, payProduct } = usePaymentStore();
+    const { myProducts, loyaltyPoints, loading, fetchMyProducts, payProduct } = usePaymentStore();
 
     const loadMyProducts = async () => {
         await fetchMyProducts();
     };
 
-    const handlePay = async (productId) => {
+    const handlePay = async (productId, usePoints = false) => { 
         const paymentData = {
             type: "PAYMENT",
             product: productId,
-            usePoints: false 
+            usePoints
         };
 
         const result = await payProduct(paymentData);
@@ -24,5 +24,5 @@ export const usePayments = () => {
         }
     };
 
-    return { myProducts, loading, loadMyProducts, handlePay };
+    return { myProducts, loyaltyPoints, loading, loadMyProducts, handlePay };
 };

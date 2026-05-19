@@ -236,16 +236,7 @@ const FavoriteCard = ({ favorite, expanded, onToggle, onEdit, onDelete, onTransf
             onClick={onToggle}
             className="group relative overflow-hidden rounded-2xl border border-[var(--color-surface-border)] cursor-pointer p-5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_28px_60px_rgba(216,27,96,0.22)] bg-[linear-gradient(125deg,#120A24_0%,#25154D_40%,#3D1E71_100%)]"
         >
-            {/* corazón en la esquina derecha superior (donde va la abreviación) */}
-            <button
-                onClick={(e) => { e.stopPropagation(); /* toggle favorito placeholder */ }}
-                title="Favorito"
-                className="absolute top-4 right-4 z-20 flex items-center justify-center h-9 w-9 rounded-full bg-[var(--color-fuchsia-vivid)]/90 text-white shadow-lg border border-white/20 hover:scale-105 transition-transform"
-            >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 0 1 7.5 3a5.94 5.94 0 0 1 4.5 2.1A5.94 5.94 0 0 1 16.5 3 5.4 5.4 0 0 1 22 8.5c0 3.78-3.4 6.86-8.55 11.53L12 21.35Z" />
-                </svg>
-            </button>
+
             {/* removed decorative blurred circle below heart as requested */}
             <div className="absolute top-6 left-6 h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--color-cyan-vivid)]/70 to-[var(--color-cyan-deep)]/70 border border-white/30" />
             {/* moved small badge + heart into preview (top-right) */}
