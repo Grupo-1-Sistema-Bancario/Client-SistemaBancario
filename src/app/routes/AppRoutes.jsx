@@ -19,6 +19,8 @@ import { TransactionsHistoryPage } from "../../features/admin/transactions-histo
 import { MyTransactions } from "../../features/client/my-transactions/components/MyTransactions.jsx"
 import { AdminHome } from "../../features/admin/home/AdminHome.jsx"
 import { ClientHome } from "../../features/client/home/ClientHome.jsx"
+import { MyCurrencies } from "../../features/client/currencies/components/MyCurrencies.jsx"
+import { ProductCatalog } from "../../features/client/currencies/components/ProductCatalog.jsx"
 
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated } = useAuthStore();
@@ -62,6 +64,8 @@ export const AppRoutes = () => {
                         <Route path="favorites" element={<Favorite />} />
                         <Route path="catalog" element={<Catalog />} />
                         <Route path="history" element={<MyTransactions />} />
+                        <Route path="currencies" element={<MyCurrencies />} />
+                        <Route path="productCurrencies" element={<ProductCatalog />} />
                     </>
                 )}
             </Route>

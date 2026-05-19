@@ -113,3 +113,11 @@ export const getAllTransactionsRequest = async () => {
 export const getTransactionHistoryRequest = async () => {
     return await axiosAdmin.get('/transactions/history');
 }
+
+export const getMyAccountCurrenciesRequest = async () => {
+    return await axiosAdmin.get('/accounts/my-account/currencies');
+};
+
+export const getProductsWithCurrenciesRequest = async () => {
+    return await axiosAdmin.get('/products/get/currencies');
+};
