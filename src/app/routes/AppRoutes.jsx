@@ -9,6 +9,7 @@ import { NewClients } from "../../features/admin/new-clients/components/NewClien
 import { ProductsPage } from "../../features/admin/products/pages/ProductsPage.jsx"
 import { AccountsStatsPage } from "../../features/admin/accounts/pages/AccountsStatsPage.jsx"
 import { UsersManagementPage } from "../../features/admin/users/pages/UsersManagementPage.jsx"
+import { NewAdministratorPage } from "../../features/admin/admin-access/pages/NewAdministratorPage.jsx"
 import { DepositForm } from "../../features/admin/deposits/components/DepositForm.jsx"
 import { RevertDepositList } from "../../features/admin/deposits/components/RevertDepositList.jsx"
 import { TransferForm } from "../../features/client/transfers/components/TransferForm.jsx"
@@ -51,6 +52,7 @@ export const AppRoutes = () => {
                         <Route path="products" element={<ProductsPage />} />
                         <Route path="accounts-stats" element={<AccountsStatsPage />} />
                         <Route path="users" element={<UsersManagementPage />} />
+                        <Route path="admins/new" element={<NewAdministratorPage />} />
                         <Route path="deposits" element={<DepositForm />} />
                         <Route path="deposits/reverse" element={<RevertDepositList />} />
                         <Route path="history" element={<TransactionsHistoryPage />} />
