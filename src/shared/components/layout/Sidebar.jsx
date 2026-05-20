@@ -74,6 +74,17 @@ const ADMIN_NAV = [
         icon: <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
       },
     ]
+  },
+  {
+    section: "control de administradores.",
+    items: [
+      {
+        id: "new-admin",
+        to: "/dashboard/admins/new",
+        label: "Nuevo Administrador",
+        icon: <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /><circle cx="12" cy="12" r="9" /></svg>
+      },
+    ]
   }
 ];
 
@@ -163,6 +174,11 @@ export default function Sidebar({ isOpen }) {
             <p className="px-3 mb-2 text-[10px] font-semibold tracking-[0.2em] uppercase text-purple-500/70">
               {group.section}
             </p>
+            {group.description && (
+              <p className="px-3 mb-3 text-[11px] leading-relaxed text-purple-300/45">
+                {group.description}
+              </p>
+            )}
             <ul className="space-y-1">
               {group.items.map(item => {
                 const isActive = location.pathname === item.to || (location.pathname === "/dashboard" && item.to === "/dashboard");
