@@ -117,7 +117,7 @@ export const NewAdministratorPage = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Anderson"
+                    placeholder="Admin"
                     className="w-full rounded-xl border border-purple-900/40 bg-white/5 px-4 py-3 text-white placeholder:text-purple-200/30 outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/20"
                   />
                 </label>
@@ -128,7 +128,7 @@ export const NewAdministratorPage = () => {
                     name="surname"
                     value={formData.surname}
                     onChange={handleChange}
-                    placeholder="Sosa"
+                    placeholder="Admin"
                     className="w-full rounded-xl border border-purple-900/40 bg-white/5 px-4 py-3 text-white placeholder:text-purple-200/30 outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/20"
                   />
                 </label>
