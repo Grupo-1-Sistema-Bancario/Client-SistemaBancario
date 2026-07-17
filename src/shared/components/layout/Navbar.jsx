@@ -383,27 +383,27 @@ export default function Navbar({ sidebarOpen, onToggleSidebar }) {
   }
 
   return (
-    <nav className="relative z-50 flex w-full items-center justify-between border-b border-purple-900/30 bg-[#0D0618]/80 px-6 py-4 backdrop-blur-xl">
-      <div className="flex items-center gap-4">
+    <nav className="dashboard-top-nav relative z-50 flex w-full items-center justify-between border-b border-purple-900/30 bg-[#0D0618]/80 px-3 py-3 sm:px-6 sm:py-4 backdrop-blur-xl">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         <button
           onClick={onToggleSidebar}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-purple-900/40 bg-white/5 text-purple-300 transition-all duration-200 hover:border-purple-500 hover:bg-purple-700/20 hover:text-white"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-purple-900/40 bg-white/5 text-purple-300 transition-all duration-200 hover:border-purple-500 hover:bg-purple-700/20 hover:text-white"
           type="button"
           aria-label="Alternar menú"
         >
           <HamburgerIcon open={sidebarOpen} />
         </button>
 
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center">
             <img src={logoAuth} alt="Astra Bank Logo" className="h-full w-full object-contain" />
           </div>
 
-          <div className="space-y-1">
-            <p className="text-sm font-black uppercase tracking-[0.28em] text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+          <div className="space-y-0.5 sm:space-y-1 min-w-0">
+            <p className="text-xs sm:text-sm font-black uppercase tracking-[0.28em] text-white truncate" style={{ fontFamily: "'Orbitron', sans-serif" }}>
               ASTRA BANK
             </p>
-            <p className="text-[11px] uppercase tracking-[0.26em] text-purple-200/70">
+            <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.26em] text-purple-200/70 hidden sm:block">
               Banca inteligente y futurista
             </p>
           </div>

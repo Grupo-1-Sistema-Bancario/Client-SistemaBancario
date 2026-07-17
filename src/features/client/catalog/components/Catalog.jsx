@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useCatalog } from '../hooks/useCatalog';
 import { usePaymentStore } from '../../payments/store/usePaymentStore'; // Importamos el store de pagos
+import MobileScreenHeader from '../../../../shared/components/layout/MobileScreenHeader.jsx';
 
 const ConfirmBuyModal = ({ isOpen, onClose, onConfirm, loading }) => {
     if (!isOpen) return null;
@@ -48,8 +49,12 @@ export const Catalog = () => {
     };
 
     return (
-        <div className="p-6 animate-fadeIn">
-            <div className="mb-8">
+        <div className="p-0 md:p-6 animate-fadeIn">
+            <MobileScreenHeader
+                title="Catálogo"
+                subtitle="Productos y servicios"
+            />
+            <div className="mb-8 hidden md:block">
                 <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
                     Catálogo de Productos
                 </h1>
@@ -61,7 +66,7 @@ export const Catalog = () => {
             {loading && products.length === 0 ? (
                 <p className="text-[var(--color-text-dark-secondary)]">Cargando catálogo...</p>
             ) : (
-                <div className="flex flex-wrap gap-6">
+                <div className="flex flex-col gap-4 md:flex-row md:flex-wrap md:gap-6">
                     {products.map((product) => {
                         // Verificamos si el producto ya está en la lista de adquiridos
                         const isAcquired = myProducts.some(myProd => myProd._id === product._id);
@@ -69,7 +74,7 @@ export const Catalog = () => {
                         const points = Math.floor(product.price / 10);
 
                         return (
-                            <div key={product._id} className="bg-[var(--color-deep-purple)] p-6 rounded-2xl border border-[var(--color-surface-border)] w-80 shadow-lg flex flex-col justify-between">
+                            <div key={product._id} className="bg-[var(--color-deep-purple)] p-5 md:p-6 rounded-2xl border border-[var(--color-surface-border)] w-full md:w-80 shadow-lg flex flex-col justify-between">
                                 <div>
                                     <h3 className="text-xl font-black text-white uppercase mb-1">{product.name}</h3>
                                     <p className="text-[var(--color-cyan-deep)] text-xs font-bold uppercase tracking-widest mb-4">

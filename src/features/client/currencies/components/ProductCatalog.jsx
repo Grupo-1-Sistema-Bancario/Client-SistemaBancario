@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
+import MobileScreenHeader from '../../../../shared/components/layout/MobileScreenHeader.jsx';
 
 const currencySymbols = {
     GTQ: 'Q', USD: '$', EUR: '€', MXN: '$', RUB: '₽',
@@ -25,9 +26,13 @@ export const ProductCatalog = () => {
     });
 
     return (
-        <div className="p-6 animate-fadeIn text-white">
-            {/* Encabezado Principal */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div className="p-0 md:p-6 animate-fadeIn text-white">
+            <MobileScreenHeader
+                title="Catálogo Astra"
+                subtitle="Productos y servicios"
+            />
+            {/* Encabezado Principal (desktop) */}
+            <div className="hidden md:flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
                 <div>
                     <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
                         Catálogo Astra
@@ -52,6 +57,24 @@ export const ProductCatalog = () => {
                         ))}
                     </select>
                 </div>
+            </div>
+
+            {/* Control de divisa en móvil */}
+            <div className="mb-4 flex items-center gap-2 rounded-lg border border-[var(--color-surface-border)] bg-black/30 px-3 py-2 md:hidden">
+                <span className="text-[10px] font-mono uppercase text-purple-400/70 tracking-wider">
+                    Ver equivalencia en:
+                </span>
+                <select
+                    value={selectedCurrency}
+                    onChange={(e) => setSelectedCurrency(e.target.value)}
+                    className="bg-transparent text-sm font-bold text-[var(--color-cyan-deep)] focus:outline-none cursor-pointer"
+                >
+                    {Object.keys(currencySymbols).filter((c) => c !== "GTQ").map((code) => (
+                        <option key={code} value={code} className="bg-[var(--color-deep-purple)] text-white">
+                            {code}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             {/* Barra de Filtros Minimalista (Tabs) */}

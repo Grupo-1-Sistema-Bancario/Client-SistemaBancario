@@ -142,7 +142,7 @@ const USER_NAV = [
   }
 ];
 
-export default function Sidebar({ isOpen }) {
+export default function Sidebar({ isOpen, onNavigate }) {
   const location = useLocation();
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
@@ -157,7 +157,7 @@ export default function Sidebar({ isOpen }) {
   return (
     <aside
       className={`
-        flex flex-col bg-[#0D0618]/60 backdrop-blur-xl border-r border-purple-900/30
+        flex h-full flex-col bg-[#0D0618]/95 md:bg-[#0D0618]/60 backdrop-blur-xl border-r border-purple-900/30
         transition-[width] duration-300 ease-in-out whitespace-nowrap overflow-hidden
         ${isOpen ? "w-72" : "w-0 border-none"}
       `}
@@ -187,6 +187,7 @@ export default function Sidebar({ isOpen }) {
                   <li key={item.id}>
                     <Link
                       to={item.to || "#"}
+                      onClick={() => onNavigate?.()}
                       className={`
                         w-full flex items-center gap-3 px-3 py-3 rounded-xl
                         text-sm font-medium transition-all duration-200 text-left

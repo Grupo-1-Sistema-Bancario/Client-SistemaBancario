@@ -1,5 +1,12 @@
 import { useEffect } from 'react';
 import { useMyTransactions } from '../hooks/useMyTransactions';
+import MobileScreenHeader from '../../../../shared/components/layout/MobileScreenHeader.jsx';
+
+const typeLabel = {
+    DEPOSIT: 'Depósito',
+    TRANSFER: 'Transferencia',
+    PAYMENT: 'Pago',
+};
 
 export const MyTransactions = () => {
     const { transactions, loading, loadTransactions } = useMyTransactions();
@@ -9,8 +16,12 @@ export const MyTransactions = () => {
     }, []);
 
     return (
-        <div className="p-6 animate-fadeIn">
-            <div className="mb-8">
+        <div className="p-0 md:p-6 animate-fadeIn">
+            <MobileScreenHeader
+                title="Historial"
+                subtitle="Movimientos de tu cuenta"
+            />
+            <div className="mb-8 hidden md:block">
                 <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
                     Historial de Transacciones
                 </h1>
@@ -28,13 +39,15 @@ export const MyTransactions = () => {
                     <p className="text-[var(--color-text-dark-secondary)] mb-4">Aún no tienes transacciones registradas.</p>
                 </div>
             ) : (
-                <div className="flex flex-wrap gap-6">
+                <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:gap-6">
                     {transactions.map((tx) => (
-                        <div key={tx._id} className="bg-[var(--color-deep-purple)] p-6 rounded-2xl border border-[var(--color-surface-border)] w-80 shadow-lg flex flex-col justify-between">
+                        <div key={tx._id} className="bg-[var(--color-deep-purple)] p-4 md:p-6 rounded-2xl border border-[var(--color-surface-border)] w-full md:w-80 shadow-lg flex flex-col justify-between">
                             <div>
-                                <div className="flex justify-between items-start mb-4">
-                                    <h3 className="text-xl font-black text-white uppercase mb-1">{tx.type}</h3>
-                                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase border ${
+                                <div className="flex justify-between items-start mb-3 md:mb-4 gap-2">
+                                    <h3 className="text-base md:text-xl font-black text-white uppercase mb-1">
+                                        {typeLabel[tx.type] || tx.type}
+                                    </h3>
+                                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase border shrink-0 ${
                                         tx.status === 'REVERSED'
                                             ? 'bg-red-500/20 text-red-400 border-red-500/30'
                                             : 'bg-green-500/20 text-green-400 border-green-500/30'
@@ -42,23 +55,23 @@ export const MyTransactions = () => {
                                         {tx.status || 'COMPLETED'}
                                     </span>
                                 </div>
-                                <p className="text-[var(--color-cyan-deep)] text-xs font-bold uppercase tracking-widest mb-4">
-                                    {new Date(tx.date || tx.createdAt).toLocaleString()}
+                                <p className="text-[var(--color-cyan-deep)] text-xs font-bold uppercase tracking-widest mb-3 md:mb-4">
+                                    {new Date(tx.date || tx.createdAt).toLocaleString('es-GT')}
                                 </p>
 
                                 <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Detalle</p>
-                                <p className="text-[var(--color-text-dark-secondary)] text-sm mb-6 line-clamp-2 h-10">
+                                <p className="text-[var(--color-text-dark-secondary)] text-sm mb-4 md:mb-6 line-clamp-2 md:h-10">
                                     {tx.description || "Transacción procesada correctamente"}
                                 </p>
 
-                                <div className="flex justify-between items-end border-t border-[var(--color-surface-border)] pt-4">
+                                <div className="flex justify-between items-end border-t border-[var(--color-surface-border)] pt-3 md:pt-4">
                                     <div>
                                         <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Ref ID</p>
                                         <p className="text-white/50 font-mono text-xs">{tx._id?.substring(0, 8)}</p>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-[var(--color-text-dark-tertiary)] text-[10px] uppercase font-bold tracking-widest mb-1">Monto</p>
-                                        <p className="text-[var(--color-fuchsia-vivid)] font-black text-2xl">Q {tx.amount?.toFixed(2)}</p>
+                                        <p className="text-[var(--color-fuchsia-vivid)] font-black text-xl md:text-2xl">Q {Number(tx.amount || 0).toFixed(2)}</p>
                                     </div>
                                 </div>
                             </div>

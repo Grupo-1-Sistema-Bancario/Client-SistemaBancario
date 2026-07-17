@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { usePayments } from '../hooks/usePayments';
+import MobileScreenHeader from '../../../../shared/components/layout/MobileScreenHeader.jsx';
 
 const ConfirmPayModal = ({ isOpen, onClose, onConfirm, loading }) => {
     if (!isOpen) return null;
@@ -82,18 +83,25 @@ export const Payments = () => {
     };
 
     return (
-        <div className="p-6 animate-fadeIn">
-            <div className="mb-8">
-                <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
-                    Mis Pagos
-                </h1>
-                <p className="text-purple-400/50 font-mono text-xs mt-2 uppercase tracking-[0.3em]">
-                    Gestión de productos adquiridos
-                </p>
-                <div className="mt-4 inline-block bg-[var(--color-space-bg)] border border-[var(--color-surface-border)] px-4 py-2 rounded-lg">
-                    <p className="text-[var(--color-text-dark-secondary)] text-sm font-bold uppercase tracking-widest">
-                        Puntos Disponibles: <span className="text-[var(--color-cyan-vivid)] text-lg">{loyaltyPoints}</span>
+        <div className="p-0 md:p-6 animate-fadeIn">
+            <MobileScreenHeader
+                title="Mis Pagos"
+                subtitle="Gestión de productos adquiridos"
+            />
+            <div className="mb-6 md:mb-8">
+                <div className="mb-4 hidden md:block">
+                    <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
+                        Mis Pagos
+                    </h1>
+                    <p className="text-purple-400/50 font-mono text-xs mt-2 uppercase tracking-[0.3em]">
+                        Gestión de productos adquiridos
                     </p>
+                </div>
+                <div className="flex w-full items-center justify-between rounded-2xl border border-[var(--color-surface-border)] bg-[var(--color-space-bg)] px-4 py-3 md:inline-flex md:w-auto md:gap-3">
+                    <p className="text-[var(--color-text-dark-secondary)] text-xs font-bold uppercase tracking-widest md:text-sm">
+                        Puntos disponibles
+                    </p>
+                    <span className="text-[var(--color-cyan-vivid)] text-xl font-black">{loyaltyPoints}</span>
                 </div>
             </div>
 
@@ -106,12 +114,12 @@ export const Payments = () => {
                     </p>
                 </div>
             ) : (
-                <div className="flex flex-wrap gap-6">
+                <div className="flex flex-col gap-4 md:flex-row md:flex-wrap md:gap-6">
                     {myProducts.map((product) => {
                         const pointsEarned = Math.floor(product.price / 10);
 
                         return (
-                            <div key={product._id} className="bg-[var(--color-deep-purple)] p-6 rounded-2xl border border-[var(--color-surface-border)] w-80 shadow-lg flex flex-col justify-between">
+                            <div key={product._id} className="bg-[var(--color-deep-purple)] p-5 md:p-6 rounded-2xl border border-[var(--color-surface-border)] w-full md:w-80 shadow-lg flex flex-col justify-between">
                                 <div>
                                     <h3 className="text-xl font-black text-white uppercase mb-1">{product.name}</h3>
                                     <p className="text-[var(--color-cyan-deep)] text-xs font-bold uppercase tracking-widest mb-4">

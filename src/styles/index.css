@@ -70,6 +70,26 @@
   animation: fadeIn 0.15s ease-out;
 }
 
+/* Safe area para bottom nav en dispositivos con home indicator */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .mobile-bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Viewport móvil: evita zoom indeseado en inputs iOS y mejora touch */
+@media (max-width: 767px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 .sidebar-underline {
   position: relative;
 }
@@ -100,7 +120,8 @@
   backdrop-filter: blur(12px);
 }
 
-nav {
+/* Solo la barra superior del dashboard (no el bottom nav móvil) */
+.dashboard-top-nav {
   background: var(--color-surface-overlay);
   backdrop-filter: blur(12px);
 }

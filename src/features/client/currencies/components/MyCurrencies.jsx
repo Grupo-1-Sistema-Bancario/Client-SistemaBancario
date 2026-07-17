@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useMyCurrencies } from '../hooks/useMyCurrencies';
+import MobileScreenHeader from '../../../../shared/components/layout/MobileScreenHeader.jsx';
 
 const currencyDetails = {
     GTQ: { name: 'Quetzal Guatemalteco', symbol: 'Q' },
@@ -50,9 +51,13 @@ export const MyCurrencies = () => {
     };
 
     return (
-        <div className="p-6 animate-fadeIn text-white">
-            {/* Encabezado Principal */}
-            <div className="mb-8">
+        <div className="p-0 md:p-6 animate-fadeIn text-white">
+            <MobileScreenHeader
+                title="Divisas"
+                subtitle="Conversión de monedas"
+            />
+            {/* Encabezado Principal (desktop) */}
+            <div className="mb-8 hidden md:block">
                 <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
                     Conversión de Divisas
                 </h1>

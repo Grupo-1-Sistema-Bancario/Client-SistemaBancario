@@ -234,14 +234,14 @@ const FavoriteCard = ({ favorite, expanded, onToggle, onEdit, onDelete, onTransf
     return (
         <article
             onClick={onToggle}
-            className="group relative overflow-hidden rounded-2xl border border-[var(--color-surface-border)] cursor-pointer p-5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_28px_60px_rgba(216,27,96,0.22)] bg-[linear-gradient(125deg,#120A24_0%,#25154D_40%,#3D1E71_100%)]"
+            className="group relative overflow-hidden rounded-2xl border border-[var(--color-surface-border)] cursor-pointer p-4 md:p-5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-all duration-300 md:hover:-translate-y-2 md:hover:scale-[1.015] hover:shadow-[0_28px_60px_rgba(216,27,96,0.22)] bg-[linear-gradient(125deg,#120A24_0%,#25154D_40%,#3D1E71_100%)]"
         >
 
             {/* removed decorative blurred circle below heart as requested */}
             <div className="absolute top-6 left-6 h-8 w-8 rounded-lg bg-gradient-to-br from-[var(--color-cyan-vivid)]/70 to-[var(--color-cyan-deep)]/70 border border-white/30" />
             {/* moved small badge + heart into preview (top-right) */}
 
-            <div className="relative z-10 min-h-44 flex flex-col justify-between">
+            <div className="relative z-10 min-h-36 md:min-h-44 flex flex-col justify-between">
                 <div className="flex items-start justify-between gap-4 pl-12">
                     <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-text-dark-tertiary)]">Favorito</p>
@@ -365,20 +365,20 @@ export const Favorite = () => {
 
     return (
         <section className="animate-fadeIn">
-            {/* Cabecera optimizada con título a la izquierda y botón "+" a la derecha */}
-            <div className="mb-8 flex items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
+            {/* Cabecera: en móvil estilo app (título + botón +); desktop sin cambios */}
+            <div className="mb-6 md:mb-8 flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                    <h1 className="text-2xl md:text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
                         Mis Favoritos
                     </h1>
-                    <p className="text-purple-400/50 font-mono text-xs mt-2 uppercase tracking-[0.3em]">
-                        Tarjetas de cuentas frecuentes
+                    <p className="text-purple-400/50 font-mono text-[10px] md:text-xs mt-1 md:mt-2 uppercase tracking-[0.3em]">
+                        Cuentas frecuentes
                     </p>
                 </div>
                 <button
                     onClick={openCreateModal}
                     title="Agregar favorito"
-                    className="w-12 h-12 flex items-center justify-center rounded-xl bg-gradient-to-r from-[var(--color-gradient-from)] to-[var(--color-gradient-mid)] text-white text-2xl font-bold hover:brightness-110 shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95"
+                    className="w-11 h-11 md:w-12 md:h-12 flex items-center justify-center rounded-full md:rounded-xl bg-gradient-to-r from-[var(--color-gradient-from)] to-[var(--color-gradient-mid)] text-white text-2xl font-bold hover:brightness-110 shadow-lg cursor-pointer transition-all hover:scale-105 active:scale-95 shrink-0"
                 >
                     +
                 </button>

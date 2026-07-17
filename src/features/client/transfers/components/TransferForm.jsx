@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTransfers } from '../hooks/useTransfers';
 import { useAuthStore } from '../../../../features/auth/store/useAuthStore';
+import MobileScreenHeader from '../../../../shared/components/layout/MobileScreenHeader.jsx';
 
 export const TransferForm = () => {
     const { handleTransfer, loading } = useTransfers();
@@ -38,8 +39,12 @@ export const TransferForm = () => {
     };
 
     return (
-        <div className="p-6 animate-fadeIn">
-            <div className="mb-8">
+        <div className="p-0 md:p-6 animate-fadeIn">
+            <MobileScreenHeader
+                title="Transferencias"
+                subtitle="Movimiento seguro entre cuentas"
+            />
+            <div className="mb-8 hidden md:block">
                 <h1 className="text-4xl font-black text-[var(--color-fuchsia-vivid)] uppercase italic tracking-wider">
                     Transferencias
                 </h1>
