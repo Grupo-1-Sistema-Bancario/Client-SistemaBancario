@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  client-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: client-frontend
+    ports:
+      - "5173:5173"
